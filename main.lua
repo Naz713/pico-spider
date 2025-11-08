@@ -3,8 +3,10 @@ function _init()
 end
 
 function _update()
- run_update()
  jump_update()
+ run_update()
+ ornt_update()
+ --printh(s.on_air)
 end
 
 function _draw()
