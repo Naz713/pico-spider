@@ -46,19 +46,26 @@ end
 function run_pos_update(run_vel)
   if (s.ornt%2)==1 then
     s.xpos+=run_vel
-    s.xpos=min(s.xpos,s.maxpos)
-    s.xpos=max(s.xpos,s.minpos)
+    s.xpos=min(s.xpos,s.xmax-8)
+    s.xpos=max(s.xpos,s.xmin)
   else
     s.ypos+=run_vel
-    s.ypos=min(s.ypos,s.maxpos)
-    s.ypos=max(s.ypos,s.minpos)
+    s.ypos=min(s.ypos,s.ymax-8)
+    s.ypos=max(s.ypos,s.ymin)
   end
 end
 
 -- update orientation and related variables
 -- when touching walls, ceiling or floor
 function ornt_update()
-  if s.ypos==s.maxpos and s.on_air then
+  if (s.ornt%2)==1 then
+    loc_xmax=s.xmax-8
+    loc_ymax=s.ymax
+  else
+    loc_xmax=s.xmax
+    loc_ymax=s.ymax-8
+  end
+  if s.ypos>=loc_ymax and s.on_air then
     s.on_air=false
     s.jvel=0
     if abs(s.ornt)!=1 then
@@ -68,7 +75,7 @@ function ornt_update()
         s.ornt=1
       end
     end
-  elseif s.xpos==s.minpos and s.on_air then
+  elseif s.xpos<=s.xmin and s.on_air then
     s.on_air=false
     s.jvel=0
     if s.ornt==1 then
@@ -76,15 +83,16 @@ function ornt_update()
     elseif abs(s.ornt)!=2 then
       s.ornt=2
     end
-  elseif s.xpos==s.maxpos and s.on_air then
+  elseif s.xpos>=loc_xmax and s.on_air then
     s.on_air=false
     s.jvel=0
+    s.xpos+=8  --this to put in the real x position
     if s.ornt==1 then
       s.ornt=-4
     elseif abs(s.ornt)!=4 then
       s.ornt=4
     end
-  elseif s.ypos==s.minpos and s.on_air then
+  elseif s.ypos<=s.ymin and s.on_air then
     s.on_air=false
     s.jvel=0
     if s.ornt==4 then
@@ -121,11 +129,17 @@ function jump_update()
     if (s.jvel<1) s.jvel=0
   
   --falling
-  elseif s.ypos<s.maxpos and s.on_air then
+  elseif s.ypos<s.ymax and s.on_air then
     s.jvel-=s.grav
     s.jvel=max(s.jvel,-s.imp)
     jump_pos_update(s.jvel)
   end
+
+  --asure we stay within limits
+  s.xpos=max(s.xmin,s.xpos)
+  s.xpos=min(s.xmax,s.xpos)
+  s.ypos=max(s.ymin,s.ypos)
+  s.ypos=min(s.ymax,s.ypos)
 end
 
 function jump_pos_update(jvel)
@@ -145,12 +159,52 @@ function jump_pos_update(jvel)
     s.ypos+=jvel
     s.jvel=-jvel
   end
+end
 
-  --asure we stay within limits
-  s.xpos=max(s.minpos,s.xpos)
-  s.xpos=min(s.maxpos,s.xpos)
-  s.ypos=max(s.minpos,s.ypos)
-  s.ypos=min(s.maxpos,s.ypos)
+function get_sprite_corners(x, y, orient)
+  if (orient%2)==1 then
+    return {lx=flr(x/8)-1, ly=flr(y/8)-1,
+            hx=flr((x+15)/8)+1, hy=flr((y+7)/8)+1}
+  else
+    return {lx=flr(x/8)-1, ly=flr(y/8)-1,
+            hx=flr((x+7)/8)+1, hy=flr((y+15)/8)+1}
+  end
+end
+
+function limits_update()
+  cnrs=get_sprite_corners(s.xpos, s.ypos, s.ornt)
+  sprs={lx_ly=mget(cnrs.lx, cnrs.ly),
+        hx_ly=mget(cnrs.hx, cnrs.ly),
+        lx_hy=mget(cnrs.lx, cnrs.hy),
+        lx_hy_1=mget(cnrs.lx, cnrs.hy-1),
+        hx_hy=mget(cnrs.hx, cnrs.hy),
+        hx_hy_1=mget(cnrs.hx, cnrs.hy-1)}
+  --HIGH Y
+  if fget(sprs.hx_hy,1) or fget(sprs.lx_hy,1) then
+    s.ymax=cnrs.hy*8-4
+  elseif fget(sprs.hx_hy_1,1) or fget(sprs.lx_hy_1,1) then
+    s.ymax=(cnrs.hy-1)*8-4
+  else
+    s.ymax=min(120, s.ymax)
+  end
+  --LOW  X
+  if fget(sprs.lx_ly,2) or fget(sprs.lx_hy,2) then
+    s.xmin=cnrs.lx*8+4
+  else
+    s.xmin=max(0,   s.xmin)
+  end
+  --LOW  Y
+  if fget(sprs.hx_ly,3) or fget(sprs.lx_ly,3) then
+    s.ymin=cnrs.ly*8+4
+  else
+    s.ymin=max(0,   s.ymin)
+  end
+  --HIGH X
+  if fget(sprs.hx_ly,4) or fget(sprs.hx_hy,4) then
+    s.xmax=cnrs.hx*8-4
+  else
+    s.xmax=min(120, s.xmax)
+  end
 end
 
 function spdr_draw()
