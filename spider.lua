@@ -1,32 +1,3 @@
-function spdr_init()
-  s={
-    sprite=0,
-    --character position
-    xpos=85,
-    ypos=32,
-    --  character orientation
-    --[[ positive/negative signals
-        towards where its looking
-      1 floor 3 ceiling
-      2 left wall 4 right wall ]]
-    ornt=1,
-    --screen limits
-    maxpos=120,
-    minpos=0,
-    --running variables
-    rvel=0,
-    racc=1,
-    mrvel=6,
-    fricc=0.75,
-    --jumping variables
-    grav=3,
-    jvel=0,
-    imp=14,
-    on_air=true,
-    drag=0.5,
-  }
-end
-
 function ornt_btns(orient)
   if (orient%2)==1 then
     return {forw=ri_btn, bckw=le_btn}
@@ -44,12 +15,13 @@ function run_update()
   elseif btn(mv_btns.bckw) then
     s.rvel-=s.racc
     s.rvel=max(s.rvel,-s.mrvel)
-  elseif abs(s.rvel)<1 then
-    s.rvel=0
   elseif s.rvel > 0 then
     s.rvel=flr(s.rvel*s.fricc)
   elseif s.rvel < 0 then
     s.rvel=ceil(s.rvel*s.fricc)
+  end
+  if abs(s.rvel)<1 then
+    s.rvel=0
   end
 
   -- SIGN orientation Update
@@ -89,10 +61,12 @@ function ornt_update()
   if s.ypos==s.maxpos and s.on_air then
     s.on_air=false
     s.jvel=0
-    if s.ornt==4 then
-      s.ornt=-1
-    else
-      s.ornt=1
+    if abs(s.ornt)!=1 then
+      if s.ornt==4 then
+        s.ornt=-1
+      else
+        s.ornt=1
+      end
     end
   elseif s.xpos==s.minpos and s.on_air then
     s.on_air=false
@@ -180,7 +154,8 @@ function jump_pos_update(jvel)
 end
 
 function spdr_draw()
-  cls(2)
+  cls(12)
+  map()
   --decide the sprite based on the position
   sprite=(flr(s.xpos)%2)*2
   
