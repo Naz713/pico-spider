@@ -18,22 +18,22 @@ function _init()
     --running variables
     rvel=0,
     racc=1,
-    mrvel=6,
+    mrvel=7,
     fricc=0.75,
     --jumping variables
-    grav=4,
+    grav=3,
     jvel=0,
-    imp=14,
+    imp=13,
     on_air=true,
     drag=0.5,
   }
 end
 
 function _update()
-  limits_update()
   jump_update()
   run_update()
   ornt_update()
+  limits_update()
   --printh(s.xmax..", "..s.xmin..", "..s.ymax..", "..s.ymin..", ")
 end
 

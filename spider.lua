@@ -78,19 +78,16 @@ function ornt_update()
   elseif s.xpos<=s.xmin and s.on_air then
     s.on_air=false
     s.jvel=0
-    if s.ornt==1 then
+    if abs(s.ornt)!=2 then
       s.ornt=-2
-    elseif abs(s.ornt)!=2 then
-      s.ornt=2
     end
   elseif s.xpos>=loc_xmax and s.on_air then
     s.on_air=false
     s.jvel=0
-    s.xpos+=8  --this to put in the real x position
-    if s.ornt==1 then
+    if abs(s.ornt)!=4 then
       s.ornt=-4
-    elseif abs(s.ornt)!=4 then
-      s.ornt=4
+      --set on the real x position, like a proper rotation
+      if (abs(s.ornt)!=2) s.xpos+=8
     end
   elseif s.ypos<=s.ymin and s.on_air then
     s.on_air=false
@@ -163,11 +160,11 @@ end
 
 function get_sprite_corners(x, y, orient)
   if (orient%2)==1 then
-    return {lx=flr(x/8)-1, ly=flr(y/8)-1,
-            hx=flr((x+15)/8)+1, hy=flr((y+7)/8)+1}
+    return {lx=flr(x/8), ly=flr(y/8),
+            hx=flr((x+15)/8), hy=flr((y+7)/8)}
   else
-    return {lx=flr(x/8)-1, ly=flr(y/8)-1,
-            hx=flr((x+7)/8)+1, hy=flr((y+15)/8)+1}
+    return {lx=flr(x/8), ly=flr(y/8),
+            hx=flr((x+7)/8), hy=flr((y+15)/8)}
   end
 end
 
@@ -176,34 +173,34 @@ function limits_update()
   sprs={lx_ly=mget(cnrs.lx, cnrs.ly),
         hx_ly=mget(cnrs.hx, cnrs.ly),
         lx_hy=mget(cnrs.lx, cnrs.hy),
-        lx_hy_1=mget(cnrs.lx, cnrs.hy-1),
-        hx_hy=mget(cnrs.hx, cnrs.hy),
-        hx_hy_1=mget(cnrs.hx, cnrs.hy-1)}
+        hx_hy=mget(cnrs.hx, cnrs.hy)}
   --HIGH Y
   if fget(sprs.hx_hy,1) or fget(sprs.lx_hy,1) then
     s.ymax=cnrs.hy*8-4
-  elseif fget(sprs.hx_hy_1,1) or fget(sprs.lx_hy_1,1) then
-    s.ymax=(cnrs.hy-1)*8-4
   else
-    s.ymax=min(120, s.ymax)
+    s.ymax=120
+    if (abs(s.ornt)==1) s.on_air=true
   end
   --LOW  X
   if fget(sprs.lx_ly,2) or fget(sprs.lx_hy,2) then
     s.xmin=cnrs.lx*8+4
   else
-    s.xmin=max(0,   s.xmin)
+    s.xmin=0
+    if (abs(s.ornt)==2) s.on_air=true
   end
   --LOW  Y
   if fget(sprs.hx_ly,3) or fget(sprs.lx_ly,3) then
     s.ymin=cnrs.ly*8+4
   else
-    s.ymin=max(0,   s.ymin)
+    s.ymin=0
+    if (abs(s.ornt)==3) s.on_air=true
   end
   --HIGH X
   if fget(sprs.hx_ly,4) or fget(sprs.hx_hy,4) then
     s.xmax=cnrs.hx*8-4
   else
-    s.xmax=min(120, s.xmax)
+    s.xmax=120
+    if (abs(s.ornt)==4) s.on_air=true
   end
 end
 
