@@ -14,7 +14,7 @@ function run_update()
     s.rvel=min(s.rvel,s.mrvel)
   elseif btn(mv_btns.bckw) then
     s.rvel-=s.racc
-    s.rvel=max(s.rvel,-s.mrvel)
+    s.rvel=max(s.rvel,-1*s.mrvel)
   elseif s.rvel > 0 then
     s.rvel=flr(s.rvel*s.fricc)
   elseif s.rvel < 0 then
@@ -114,6 +114,7 @@ function jump_update()
         s.ornt=-1
       end
     elseif abs(s.ornt)==3 then
+      -- turn to ornt 1 with same sign
       s.ornt=sgn(s.ornt)
       s.jvel*=-1
     end
@@ -128,7 +129,7 @@ function jump_update()
   --falling
   elseif s.ypos<s.ymax and s.on_air then
     s.jvel-=s.grav
-    s.jvel=max(s.jvel,-s.imp)
+    s.jvel=max(s.jvel,-1*s.imp)
     jump_pos_update(s.jvel)
   end
 
@@ -137,24 +138,33 @@ function jump_update()
   s.xpos=min(s.xmax,s.xpos)
   s.ypos=max(s.ymin,s.ypos)
   s.ypos=min(s.ymax,s.ypos)
+  printh("POS: "..s.xpos..", "..s.ypos)
 end
 
 function jump_pos_update(jvel)
   --faliing down
   if jvel<0 then
+    pred_tray(s.xpos,s.ypos,jvel,0,-1)
     s.ypos-=jvel
   -- jump up-right
   elseif s.ornt==1 or abs(s.ornt)==2 then
-    s.ypos-=jvel
+    pred_tray(s.xpos,s.ypos,jvel,1,-1)
     s.xpos+=jvel
+    s.ypos-=jvel
   -- jump up-left
   elseif s.ornt==-1 or abs(s.ornt)==4 then
-    s.ypos-=jvel
+    pred_tray(s.xpos,s.ypos,jvel,-1,-1)
     s.xpos-=jvel
-  elseif abs(s.ornt)==3 then
-    --never should reach here
-    s.ypos+=jvel
-    s.jvel=-jvel
+    s.ypos-=jvel
+  end
+end
+
+function pred_tray(x,y,vel,xdir,ydir)
+  printh("POS2: "..x..", "..y)
+  printh("P_IN: "..vel..", "..xdir..", "..ydir)
+  for it=vel,0,(-1*sgn(vel)) do
+    limits_update(x+(it*xdir),y+(it*ydir),false)
+    printh("PRED: "..x+(it*xdir)..", "..y+(it*ydir))
   end
 end
 
@@ -168,8 +178,8 @@ function get_sprite_corners(x, y, orient)
   end
 end
 
-function limits_update()
-  cnrs=get_sprite_corners(s.xpos, s.ypos, s.ornt)
+function limits_update(x, y, always_update)
+  cnrs=get_sprite_corners(x, y, s.ornt)
   sprs={lx_ly=mget(cnrs.lx, cnrs.ly),
         hx_ly=mget(cnrs.hx, cnrs.ly),
         lx_hy=mget(cnrs.lx, cnrs.hy),
@@ -177,28 +187,28 @@ function limits_update()
   --HIGH Y
   if fget(sprs.hx_hy,1) or fget(sprs.lx_hy,1) then
     s.ymax=cnrs.hy*8-4
-  else
+  elseif always_update then
     s.ymax=120
     if (abs(s.ornt)==1) s.on_air=true
   end
   --LOW  X
   if fget(sprs.lx_ly,2) or fget(sprs.lx_hy,2) then
     s.xmin=cnrs.lx*8+4
-  else
+  elseif always_update then
     s.xmin=0
     if (abs(s.ornt)==2) s.on_air=true
   end
   --LOW  Y
   if fget(sprs.hx_ly,3) or fget(sprs.lx_ly,3) then
     s.ymin=cnrs.ly*8+4
-  else
+  elseif always_update then
     s.ymin=0
     if (abs(s.ornt)==3) s.on_air=true
   end
   --HIGH X
   if fget(sprs.hx_ly,4) or fget(sprs.hx_hy,4) then
     s.xmax=cnrs.hx*8-4
-  else
+  elseif always_update then
     s.xmax=120
     if (abs(s.ornt)==4) s.on_air=true
   end

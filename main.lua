@@ -27,13 +27,14 @@ function _init()
     on_air=true,
     drag=0.5,
   }
+  --TODO resolver saltos en paredes angostas/cercanas
 end
 
 function _update()
   jump_update()
   run_update()
   ornt_update()
-  limits_update()
+  limits_update(s.xpos, s.ypos, true)
   --printh(s.xmax..", "..s.xmin..", "..s.ymax..", "..s.ymin..", ")
 end
 
