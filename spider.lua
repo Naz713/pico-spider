@@ -191,6 +191,9 @@ function limits_update(x, y, always_update)
         hx_ly=mget(cnrs.hx, cnrs.ly),
         lx_hy=mget(cnrs.lx, cnrs.hy),
         hx_hy=mget(cnrs.hx, cnrs.hy)}
+  --[[ The sprite flags indicate if they block movement
+       in the orientation equals to its flag
+       always at the halfwaypoint in the sprite]]
   --HIGH Y
   if fget(sprs.hx_hy,1) or fget(sprs.lx_hy,1) then
     s.ymax=cnrs.hy*8-4
