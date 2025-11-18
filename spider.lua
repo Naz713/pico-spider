@@ -46,13 +46,10 @@ end
 function run_pos_update(run_vel)
   if (s.ornt%2)==1 then
     s.xpos+=run_vel
-    s.xpos=min(s.xpos,s.xmax-8)
-    s.xpos=max(s.xpos,s.xmin)
   else
     s.ypos+=run_vel
-    s.ypos=min(s.ypos,s.ymax-8)
-    s.ypos=max(s.ypos,s.ymin)
   end
+  within_pos_limits()
 end
 
 -- update orientation and related variables
@@ -85,9 +82,12 @@ function ornt_update()
     s.on_air=false
     s.jvel=0
     if abs(s.ornt)!=4 then
-      s.ornt=-4
       --set on the real x position, like a proper rotation
+      -- based on orientation
       if (abs(s.ornt)!=2) s.xpos+=8
+      --then update the orientation
+      s.ornt=-4
+      within_pos_limits()
     end
   elseif s.ypos<=s.ymin and s.on_air then
     s.on_air=false
@@ -121,7 +121,7 @@ function jump_update()
     jump_pos_update(s.jvel)
   
   --jumping
-  elseif not btn(x_btn) and s.jvel>0 and s.on_air then
+  elseif s.jvel>0 and s.on_air then
     jump_pos_update(s.jvel)
     s.jvel*=s.drag
     if (s.jvel<1) s.jvel=0
@@ -132,17 +132,27 @@ function jump_update()
     s.jvel=max(s.jvel,-1*s.imp)
     jump_pos_update(s.jvel)
   end
-
   --asure we stay within limits
-  s.xpos=max(s.xmin,s.xpos)
-  s.xpos=min(s.xmax,s.xpos)
-  s.ypos=max(s.ymin,s.ypos)
-  s.ypos=min(s.ymax,s.ypos)
-  printh("POS: "..s.xpos..", "..s.ypos)
+  within_pos_limits()
+end
+
+function within_pos_limits()
+  --asure we stay within limits
+  if (s.ornt%2)==1 then
+    s.xpos=min(s.xpos,s.xmax-8)
+    s.xpos=max(s.xpos,s.xmin)
+    s.ypos=min(s.ymax,s.ypos)
+    s.ypos=max(s.ymin,s.ypos)
+  else
+    s.xpos=min(s.xmax,s.xpos)
+    s.xpos=max(s.xmin,s.xpos)
+    s.ypos=min(s.ypos,s.ymax-8)
+    s.ypos=max(s.ypos,s.ymin)
+  end
 end
 
 function jump_pos_update(jvel)
-  --faliing down
+  --falling down
   if jvel<0 then
     pred_tray(s.xpos,s.ypos,jvel,0,-1)
     s.ypos-=jvel
@@ -160,12 +170,9 @@ function jump_pos_update(jvel)
 end
 
 function pred_tray(x,y,vel,xdir,ydir)
-  printh("POS2: "..x..", "..y)
-  printh("P_IN: "..vel..", "..xdir..", "..ydir)
   for it=vel,0,(-1*sgn(vel)) do
     limits_update(x+(it*xdir),y+(it*ydir),false)
-    printh("PRED: "..x+(it*xdir)..", "..y+(it*ydir))
-  end
+  end  
 end
 
 function get_sprite_corners(x, y, orient)
