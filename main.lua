@@ -1,5 +1,7 @@
 function _init()
- s={
+  s={
+    bulbs=0,
+    invc_t=0,
     sprite=0,
     --character position
     xpos=64,
@@ -26,6 +28,10 @@ function _init()
     imp=13,
     on_air=true,
     drag=0.5,
+  }
+  ants={
+    max=16,
+    alive={}
   }
 end
 
