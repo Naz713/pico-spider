@@ -9,7 +9,8 @@ o_btn=🅾️
 x_btn=❎
 #include main.lua
 #include spider.lua
-#include ants.lua
+#include spawns.lua
+#include interactions.lua
 
 __gfx__
 03bb7b300000000003bb7b300000000003bb7b300000000003bb7b30000000000000000000000000000000000000000000000000000000000000000000000000
