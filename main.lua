@@ -29,6 +29,10 @@ function _init()
     on_air=true,
     drag=0.5,
   }
+  bulbs={
+    max=16,
+    alive=0
+  }
   ants={
     max=16,
     alive={}

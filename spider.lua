@@ -225,6 +225,7 @@ function limits_update(x, y, always_update)
 end
 
 function spdr_draw()
+  --TODO consider a lazy following camara
   cls(12)
   map()
   --decide the sprite based on the position
