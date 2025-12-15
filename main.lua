@@ -45,8 +45,10 @@ function _update()
   run_update()
   ornt_update()
   --printh(s.xmax..", "..s.xmin..", "..s.ymax..", "..s.ymin..", ")
+  spawns_update(s.xpos,s.ypos)
 end
 
 function _draw()
  spdr_draw()
+ draw_ants()
 end

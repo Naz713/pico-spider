@@ -1,5 +1,5 @@
 function spawns_update(sx,sy)
-  r=8 --radius of checks for (spawns screen 16l)
+  r=8 --radius of checks for spawning (screen 16)
   x=flr(sx/8)
   y=flr(sy/8)
   for ix=x-r,x+r-1 do
@@ -8,10 +8,7 @@ function spawns_update(sx,sy)
       ant_emerge(ix,iy)
     end
   end
-end
-
-function draw_ants()
-    
+  ants_move()
 end
 
 function bulb_spawn(x,y)
@@ -31,12 +28,34 @@ function ant_emerge(ix,iy)
   -- 5 flag to indicate spawn sprites
   if fget(map_sprt,5) and #(ants.alive) < bulbs.max and
       rnd()<=spwnp then
-    --TODO consider other all aorintation posibilities
-    --for both spawn sprite and ant sprite
-    add(ants.alive, {x=(ix*8)-4,y=(iy*8), ornt=1})
+    for flag=1,4 do
+      if fget(map_sprt,flag) then
+        return add(ants.alive, {xpos=(ix*8),ypos=(iy*8),ornt=flag})
+      end
+    end
+  end
+end
+
+function draw_ants()
+  for ant in all(ants.alive) do
+    horspr=48+(ant.xpos%2)
+    verspr=50+(ant.ypos%2)
+
+    -- horizontal orientation (odd)
+    if (ant.ornt%2)==1 then
+      spr(horspr, ant.xpos, ant.ypos,1,1,
+          (ant.ornt<0), (abs(ant.ornt)>2))
+    
+    -- vertical orientation (even)
+    else
+      spr(verspr, ant.xpos, ant.ypos,1,1,
+          (abs(ant.ornt)>2), (ant.ornt<0))
+    end
   end
 end
 
 function ants_move()
-    
+  for ant in all(ants.alive) do
+    --TODO
+  end
 end
