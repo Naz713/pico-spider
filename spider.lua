@@ -233,14 +233,16 @@ function spdr_draw()
   if (s.ornt%2)==1 then
     --decide the sprite based on the position
     sprite=(flr(s.xpos)%2)*2
-    spr(sprite,s.xpos,s.ypos,2,1,
+    spr(sprite,s.xpos,s.ypos,
+        2,1,
         (s.ornt<0), (abs(s.ornt)>2))
   
   -- vertical orientation (even)
   else
     --decide the sprite based on the position
-    sprite=(flr(s.ypos)%2)*2
-    spr(sprite+16,s.xpos,s.ypos,1,2,
+    sprite=16+(flr(s.ypos)%2)*2
+    spr(sprite,s.xpos,s.ypos,
+        1,2,
         (abs(s.ornt)>2), (s.ornt<0))
   end 
 end
