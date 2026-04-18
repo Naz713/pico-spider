@@ -224,11 +224,36 @@ function limits_update(x, y, always_update)
   end
 end
 
+function spdr_front_legs()
+  if (s.ornt%2)==1 then
+    -- horizontal orientation (odd)
+    if s.ornt<0 then
+      plus_x=0
+    else
+      plus_x=15
+    end
+    if abs(s.ornt)==3 then
+      plus_y=0
+    else
+      plus_y=7
+    end
+  else
+    -- vertical orientation (even)
+    if abs(s.ornt)==2 then
+      plus_x=0
+    else
+      plus_x=7
+    end
+    if s.ornt<0 then
+      plus_y=0
+    else
+      plus_y=15
+    end
+  end
+  return {x=s.xpos+plus_x, y=s.ypos+plus_y}
+end
+
 function spdr_draw()
-  --TODO consider a lazy following camara
-  cls(12)
-  map()
-  
   -- horizontal orientation (odd)
   if (s.ornt%2)==1 then
     --decide the sprite based on the position

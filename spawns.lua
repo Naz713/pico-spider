@@ -13,12 +13,21 @@ end
 
 function bulb_spawn(x,y)
   map_sprt=mget(x,y)
-  spwnp=0.01
+  spwnp=0.001
   -- 6 flag to indicate empty bulb sprites (7 full)
   if fget(map_sprt,6) and bulbs.alive < bulbs.max and
       rnd()<=spwnp then
     mset(x,y, map_sprt-16)
     bulbs.alive+=1
+  end
+end
+
+function bulb_despawn(x,y)
+  map_sprt=mget(x,y)
+  -- 7 flag to indicate empty bulb sprites (6 empty)
+  if fget(map_sprt,7) then
+    mset(x,y, map_sprt+16)
+    bulbs.alive-=1
   end
 end
 
