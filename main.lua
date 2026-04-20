@@ -36,6 +36,7 @@ function _init()
   }
   ants={
     max=16,
+    mvel=5,
     alive={}
   }
 end

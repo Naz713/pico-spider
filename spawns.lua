@@ -33,13 +33,13 @@ end
 
 function ant_emerge(ix,iy)
   map_sprt=mget(ix,iy)
-  spwnp=0.01
+  spwnp=0.001
   -- 5 flag to indicate spawn sprites
   if fget(map_sprt,5) and #(ants.alive) < bulbs.max and
       rnd()<=spwnp then
     for flag=1,4 do
       if fget(map_sprt,flag) then
-        return add(ants.alive, {xpos=(ix*8),ypos=(iy*8),ornt=flag})
+        return add(ants.alive, {xpos=(ix*8),ypos=(iy*8), vel=0, ornt=flag})
       end
     end
   end
@@ -65,6 +65,15 @@ end
 
 function ants_move()
   for ant in all(ants.alive) do
-    --TODO
+    xsign=sgn(s.xpos-ant.xpos)
+    ysign=sgn(s.ypos-ant.ypos)
+    -- horizontal orientation (odd)
+    if (ant.ornt%2)==1 then
+
+    -- vertical orientation (even)
+    else
+      spr(verspr, ant.xpos, ant.ypos,1,1,
+          (abs(ant.ornt)>2), (ant.ornt<0))
+    end
   end
 end
