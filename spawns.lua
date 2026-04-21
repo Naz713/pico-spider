@@ -14,9 +14,10 @@ end
 function bulb_spawn(x,y)
   map_sprt=mget(x,y)
   spwnp=0.001
-  -- 6 flag to indicate empty bulb sprites (7 full)
-  if fget(map_sprt,6) and bulbs.alive < bulbs.max and
-      rnd()<=spwnp then
+  -- flag 3:Fruit bearing
+  -- flag 4:Fruit Full
+  if fget(map_sprt,3) and not fget(map_sprt,4)
+    and bulbs.alive < bulbs.max and rnd()<=spwnp then
     mset(x,y, map_sprt-16)
     bulbs.alive+=1
   end
@@ -24,8 +25,9 @@ end
 
 function bulb_despawn(x,y)
   map_sprt=mget(x,y)
-  -- 7 flag to indicate empty bulb sprites (6 empty)
-  if fget(map_sprt,7) then
+  -- flag 3:Fruit bearing
+  -- flag 4:Fruit Full
+  if fget(map_sprt,3) and fget(map_sprt,4) then
     mset(x,y, map_sprt+16)
     bulbs.alive-=1
   end
@@ -34,14 +36,12 @@ end
 function ant_emerge(ix,iy)
   map_sprt=mget(ix,iy)
   spwnp=0.001
-  -- 5 flag to indicate spawn sprites
+  -- flag 5:Thorn Sprites Damage dealing/Ant Spawner
   if fget(map_sprt,5) and #(ants.alive) < bulbs.max and
       rnd()<=spwnp then
-    for flag=1,4 do
-      if fget(map_sprt,flag) then
-        return add(ants.alive, {xpos=(ix*8),ypos=(iy*8), vel=0, ornt=flag})
-      end
-    end
+    -- flags 1,2:Orientation (as the character) to where it has a base to solid
+    ant_ornt=shr(fget(map_sprt)%8,1) -- turn the second and third bit into an number: the ornt
+    return add(ants.alive, {xpos=(ix*8),ypos=(iy*8), vel=0, ornt=ant_ornt})
   end
 end
 

@@ -1,3 +1,12 @@
+--[[FLAG MEANING:
+0: solid (impassable)
+1,2:Orientation (as the character) to where it has a base to solid
+1:vertical u horizontal [1:Horizontal 0:Vertical] (include in above)
+3:Fruit bearing
+4:Fruit Full
+5:Thorn Sprites Damage dealing/Ant Spawner
+]]
+
 function _init()
   s={
     bulbs=4,
