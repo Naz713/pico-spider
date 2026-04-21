@@ -178,25 +178,29 @@ end
 function get_sprite_corners(x, y, orient)
   --outside of the sprite corners
   if (orient%2)==1 then
-    return {lx=flr((x-1)/8), ly=flr((y-1)/8),
-            hx=flr((x+16)/8), hy=flr((y+8)/8)}
+    return {lx=flr(x/8), ly=flr(y/8),
+            hx=flr((x+15)/8), hy=flr((y+7)/8)}
   else
-    return {lx=flr((x-1)/8), ly=flr((y-1)/8),
-            hx=flr((x+8)/8), hy=flr((y+16)/8)}
+    return {lx=flr(x/8), ly=flr(y/8),
+            hx=flr((x+7)/8), hy=flr((y+15)/8)}
   end
 end
 
 function limits_update(x, y, always_update)
   cnrs=get_sprite_corners(x, y, s.ornt)
-  sprs={lx_ly=mget(cnrs.lx, cnrs.ly),
-        hx_ly=mget(cnrs.hx, cnrs.ly),
-        lx_hy=mget(cnrs.lx, cnrs.hy),
-        hx_hy=mget(cnrs.hx, cnrs.hy)}
+  sprs={lx_ly=mget(cnrs.lx-1, cnrs.ly),
+        lx_hy=mget(cnrs.lx-1, cnrs.hy),
+        hx_ly=mget(cnrs.hx+1, cnrs.ly),
+        hx_hy=mget(cnrs.hx+1, cnrs.hy),
+        hy_lx=mget(cnrs.lx, cnrs.hy+1),
+        hy_hx=mget(cnrs.hx, cnrs.hy+1),
+        ly_lx=mget(cnrs.lx, cnrs.ly-1),
+        ly_hx=mget(cnrs.hx, cnrs.ly-1)}
   --The sprite flag (0) indicate if they block is solid and blocks movement
   --[[TODO: Create 8 points (then sprites) to check instead of 4
           two for each UP, DWN, LFT, RGT, then check with no overlap]]
   --HIGH Y
-  if fget(sprs.hx_hy,0) or fget(sprs.lx_hy,0) then
+  if fget(sprs.hy_lx,0) or fget(sprs.hy_hx,0) then
     s.ymax=cnrs.hy*8
   elseif always_update then
     s.ymax=120
@@ -204,14 +208,14 @@ function limits_update(x, y, always_update)
   end
   --LOW  X
   if fget(sprs.lx_ly,0) or fget(sprs.lx_hy,0) then
-    s.xmin=cnrs.lx*8+8
+    s.xmin=cnrs.lx*8
   elseif always_update then
     s.xmin=0
     if (abs(s.ornt)==2) s.on_air=true
   end
   --LOW  Y
-  if fget(sprs.hx_ly,0) or fget(sprs.lx_ly,0) then
-    s.ymin=cnrs.ly*8+8
+  if fget(sprs.ly_lx,0) or fget(sprs.ly_hx,0) then
+    s.ymin=cnrs.ly*8
   elseif always_update then
     s.ymin=0
     if (abs(s.ornt)==3) s.on_air=true
