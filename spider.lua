@@ -178,11 +178,11 @@ end
 function get_sprite_corners(x, y, orient)
   --outside of the sprite corners
   if (orient%2)==1 then
-    return {lx=flr(x/8), ly=flr(y/8),
-            hx=flr((x+15)/8), hy=flr((y+7)/8)}
+    return {lx=(x\8), ly=(y\8),
+            hx=(x+15)\8, hy=(y+7)\8}
   else
-    return {lx=flr(x/8), ly=flr(y/8),
-            hx=flr((x+7)/8), hy=flr((y+15)/8)}
+    return {lx=(x\8), ly=(y\8),
+            hx=(x+7)\8, hy=(y+15)\8}
   end
 end
 

@@ -68,7 +68,7 @@ function _update()
   jump_update()
   run_update()
   ornt_update()
-  --printh(s.xmax..", "..s.xmin..", "..s.ymax..", "..s.ymin..", ")
+  printh(s.xmax..", "..s.xmin..", "..s.ymax..", "..s.ymin..", "..s.xpos..", "..s.ypos..", ")
   spawns_update(s.xpos,s.ypos)
   interactions_update()
 end
