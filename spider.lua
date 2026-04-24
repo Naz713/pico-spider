@@ -118,11 +118,11 @@ function jump_update()
       s.ornt=sgn(s.ornt)
       s.jvel*=-1
     end
-    jump_pos_update(s.jvel)
+    jump_pos_update()
   
   --jumping
   elseif s.jvel>0 and s.on_air then
-    jump_pos_update(s.jvel)
+    jump_pos_update()
     s.jvel*=s.drag
     if (s.jvel<1) s.jvel=0
   
@@ -130,7 +130,7 @@ function jump_update()
   elseif s.ypos<s.ymax and s.on_air then
     s.jvel-=s.grav
     s.jvel=max(s.jvel,-1*s.imp)
-    jump_pos_update(s.jvel)
+    jump_pos_update()
   end
   --asure we stay within limits
   within_pos_limits()
@@ -151,27 +151,29 @@ function within_pos_limits()
   end
 end
 
-function jump_pos_update(jvel)
+function jump_pos_update()
   --falling down
-  if jvel<0 then
-    pred_tray(s.xpos,s.ypos,jvel,0,-1)
-    s.ypos-=jvel
+  if s.jvel<0 then
+    pred_tray(0,-1)
+    s.ypos-=s.jvel
   -- jump up-right
   elseif s.ornt==1 or abs(s.ornt)==2 then
-    pred_tray(s.xpos,s.ypos,jvel,1,-1)
-    s.xpos+=jvel
-    s.ypos-=jvel
+    pred_tray(1,-1)
+    s.xpos+=s.jvel
+    s.ypos-=s.jvel
   -- jump up-left
   elseif s.ornt==-1 or abs(s.ornt)==4 then
-    pred_tray(s.xpos,s.ypos,jvel,-1,-1)
-    s.xpos-=jvel
-    s.ypos-=jvel
+    pred_tray(-1,-1)
+    s.xpos-=s.jvel
+    s.ypos-=s.jvel
   end
 end
 
-function pred_tray(x,y,vel,xdir,ydir)
-  for it=vel,0,(-1*sgn(vel)) do
-    limits_update(x+(it*xdir),y+(it*ydir),false)
+function pred_tray(xdir,ydir)
+  for it=s.jvel,0,(-1*sgn(s.jvel)) do
+    --printh("PRED: "..s.xpos+(it*xdir)..", "..s.ypos+(it*ydir))
+    limits_update(s.xpos+(it*xdir),s.ypos+(it*ydir),false)
+    --printh(s.xmax..", "..s.xmin..", "..s.ymax..", "..s.ymin.." | "..s.xpos..", "..s.ypos..", "..s.ornt)
   end  
 end
 
