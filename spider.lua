@@ -118,11 +118,11 @@ function jump_update()
       s.ornt=sgn(s.ornt)
       s.jvel*=-1
     end
-    jump_pos_update()
+    jump_pos_update(s.jvel)
   
   --jumping
   elseif s.jvel>0 and s.on_air then
-    jump_pos_update()
+    jump_pos_update(s.jvel)
     s.jvel*=s.drag
     if (s.jvel<1) s.jvel=0
   
@@ -130,7 +130,7 @@ function jump_update()
   elseif s.ypos<s.ymax and s.on_air then
     s.jvel-=s.grav
     s.jvel=max(s.jvel,-1*s.imp)
-    jump_pos_update()
+    jump_pos_update(s.jvel)
   end
   --asure we stay within limits
   within_pos_limits()
@@ -151,80 +151,77 @@ function within_pos_limits()
   end
 end
 
-function jump_pos_update()
+function jump_pos_update(jvel)
   --falling down
-  if s.jvel<0 then
-    pred_tray(0,-1)
-    s.ypos-=s.jvel
+  if jvel<0 then
+    pred_tray(s.xpos,s.ypos,jvel,0,-1)
+    s.ypos-=jvel
   -- jump up-right
   elseif s.ornt==1 or abs(s.ornt)==2 then
-    pred_tray(1,-1)
-    s.xpos+=s.jvel
-    s.ypos-=s.jvel
+    pred_tray(s.xpos,s.ypos,jvel,1,-1)
+    s.xpos+=jvel
+    s.ypos-=jvel
   -- jump up-left
   elseif s.ornt==-1 or abs(s.ornt)==4 then
-    pred_tray(-1,-1)
-    s.xpos-=s.jvel
-    s.ypos-=s.jvel
+    pred_tray(s.xpos,s.ypos,jvel,-1,-1)
+    s.xpos-=jvel
+    s.ypos-=jvel
   end
 end
 
-function pred_tray(xdir,ydir)
-  for it=s.jvel,0,(-1*sgn(s.jvel)) do
-    --printh("PRED: "..s.xpos+(it*xdir)..", "..s.ypos+(it*ydir))
-    limits_update(s.xpos+(it*xdir),s.ypos+(it*ydir),false)
-    --printh(s.xmax..", "..s.xmin..", "..s.ymax..", "..s.ymin.." | "..s.xpos..", "..s.ypos..", "..s.ornt)
+function pred_tray(x,y,vel,xdir,ydir)
+  for it=vel,0,(-1*sgn(vel)) do
+    limits_update(x+(it*xdir),y+(it*ydir),false)
   end  
 end
 
 function get_sprite_corners(x, y, orient)
-  --outside of the sprite corners
   if (orient%2)==1 then
-    return {lx=(x\8), ly=(y\8),
-            hx=(x+15)\8, hy=(y+7)\8}
+    return {lx=flr(x/8), ly=flr(y/8),
+            hx=flr((x+15)/8), hy=flr((y+7)/8)}
   else
-    return {lx=(x\8), ly=(y\8),
-            hx=(x+7)\8, hy=(y+15)\8}
+    return {lx=flr(x/8), ly=flr(y/8),
+            hx=flr((x+7)/8), hy=flr((y+15)/8)}
   end
 end
 
 function limits_update(x, y, always_update)
   cnrs=get_sprite_corners(x, y, s.ornt)
-  sprs={lx_ly=mget(cnrs.lx-1, cnrs.ly),
-        lx_hy=mget(cnrs.lx-1, cnrs.hy),
-        hx_ly=mget(cnrs.hx+1, cnrs.ly),
-        hx_hy=mget(cnrs.hx+1, cnrs.hy),
-        hy_lx=mget(cnrs.lx, cnrs.hy+1),
-        hy_hx=mget(cnrs.hx, cnrs.hy+1),
-        ly_lx=mget(cnrs.lx, cnrs.ly-1),
-        ly_hx=mget(cnrs.hx, cnrs.ly-1)}
-  --The sprite flag (0) indicate if they block is solid and blocks movement
-  --[[TODO: Create 8 points (then sprites) to check instead of 4
-          two for each UP, DWN, LFT, RGT, then check with no overlap]]
+  sprs={lx_ly=mget(cnrs.lx, cnrs.ly),
+        hx_ly=mget(cnrs.hx, cnrs.ly),
+        lx_hy=mget(cnrs.lx, cnrs.hy),
+        hx_hy=mget(cnrs.hx, cnrs.hy)}
+  --[[ The sprite flags indicate if they block movement
+       in the orientation equals to its flag
+       always at the halfwaypoint in the sprite]]
   --HIGH Y
-  if fget(sprs.hy_lx,0) or fget(sprs.hy_hx,0) then
-    s.ymax=cnrs.hy*8
+  if (fget(sprs.hx_hy,1) and not fget(sprs.hx_hy,0)) or
+      (fget(sprs.lx_hy,1) and not fget(sprs.lx_hy,0)) then
+    s.ymax=cnrs.hy*8-4
   elseif always_update then
     s.ymax=120
     if (abs(s.ornt)==1) s.on_air=true
   end
   --LOW  X
-  if fget(sprs.lx_ly,0) or fget(sprs.lx_hy,0) then
-    s.xmin=cnrs.lx*8
+  if (fget(sprs.lx_ly,2) and not fget(sprs.lx_ly,0)) or
+      (fget(sprs.lx_hy,2) and not fget(sprs.lx_hy,0)) then
+    s.xmin=cnrs.lx*8+4
   elseif always_update then
     s.xmin=0
     if (abs(s.ornt)==2) s.on_air=true
   end
   --LOW  Y
-  if fget(sprs.ly_lx,0) or fget(sprs.ly_hx,0) then
-    s.ymin=cnrs.ly*8
+  if (fget(sprs.hx_ly,3) and not fget(sprs.hx_ly,0)) or
+      (fget(sprs.lx_ly,3) and not fget(sprs.lx_ly,0)) then
+    s.ymin=cnrs.ly*8+4
   elseif always_update then
     s.ymin=0
     if (abs(s.ornt)==3) s.on_air=true
   end
   --HIGH X
-  if fget(sprs.hx_ly,0) or fget(sprs.hx_hy,0) then
-    s.xmax=cnrs.hx*8
+  if (fget(sprs.hx_ly,4) and not fget(sprs.hx_ly,0)) or
+      (fget(sprs.hx_hy,4) and not fget(sprs.hx_hy,0)) then
+    s.xmax=cnrs.hx*8-4
   elseif always_update then
     s.xmax=120
     if (abs(s.ornt)==4) s.on_air=true

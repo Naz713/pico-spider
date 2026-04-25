@@ -1,12 +1,3 @@
---[[FLAG MEANING:
-0: solid (impassable)
-1,2:Orientation (as the character) to where it has a base to solid
-1:vertical u horizontal [1:Horizontal 0:Vertical] (include in above)
-3:Fruit bearing
-4:Fruit Full
-5:Thorn Sprites Damage dealing/Ant Spawner
-]]
-
 function _init()
   s={
     bulbs=4,
@@ -68,7 +59,7 @@ function _update()
   jump_update()
   run_update()
   ornt_update()
-  --printh(s.xmax..", "..s.xmin..", "..s.ymax..", "..s.ymin.." | "..s.xpos..", "..s.ypos..", "..s.ornt)
+  --printh(s.xmax..", "..s.xmin..", "..s.ymax..", "..s.ymin..", ")
   spawns_update(s.xpos,s.ypos)
   interactions_update()
 end
