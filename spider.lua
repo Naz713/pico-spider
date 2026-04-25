@@ -195,32 +195,28 @@ function limits_update(x, y, always_update)
        in the orientation equals to its flag
        always at the halfwaypoint in the sprite]]
   --HIGH Y
-  if (fget(sprs.hx_hy,1) and not fget(sprs.hx_hy,0)) or
-      (fget(sprs.lx_hy,1) and not fget(sprs.lx_hy,0)) then
+  if fget(sprs.hx_hy,1) or fget(sprs.lx_hy,1) then
     s.ymax=cnrs.hy*8-4
   elseif always_update then
     s.ymax=120
     if (abs(s.ornt)==1) s.on_air=true
   end
   --LOW  X
-  if (fget(sprs.lx_ly,2) and not fget(sprs.lx_ly,0)) or
-      (fget(sprs.lx_hy,2) and not fget(sprs.lx_hy,0)) then
+  if fget(sprs.lx_ly,2) or fget(sprs.lx_hy,2) then
     s.xmin=cnrs.lx*8+4
   elseif always_update then
     s.xmin=0
     if (abs(s.ornt)==2) s.on_air=true
   end
   --LOW  Y
-  if (fget(sprs.hx_ly,3) and not fget(sprs.hx_ly,0)) or
-      (fget(sprs.lx_ly,3) and not fget(sprs.lx_ly,0)) then
+  if fget(sprs.hx_ly,3) or fget(sprs.lx_ly,3) then
     s.ymin=cnrs.ly*8+4
   elseif always_update then
     s.ymin=0
     if (abs(s.ornt)==3) s.on_air=true
   end
   --HIGH X
-  if (fget(sprs.hx_ly,4) and not fget(sprs.hx_ly,0)) or
-      (fget(sprs.hx_hy,4) and not fget(sprs.hx_hy,0)) then
+  if fget(sprs.hx_ly,4) or fget(sprs.hx_hy,4) then
     s.xmax=cnrs.hx*8-4
   elseif always_update then
     s.xmax=120
