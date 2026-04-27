@@ -176,48 +176,55 @@ function pred_tray(x,y,vel,xdir,ydir)
 end
 
 function get_sprite_corners(x, y, orient)
+  --Inner corners in the sprite with [0-127] coordinates
   if (orient%2)==1 then
-    return {lx=flr(x/8), ly=flr(y/8),
-            hx=flr((x+15)/8), hy=flr((y+7)/8)}
+    return {lx=(x), ly=(y),
+            hx=(x+15), hy=(y+7)}
   else
-    return {lx=flr(x/8), ly=flr(y/8),
-            hx=flr((x+7)/8), hy=flr((y+15)/8)}
+    return {lx=(x), ly=(y),
+            hx=(x+7), hy=(y+15)}
   end
 end
 
 function limits_update(x, y, always_update)
   cnrs=get_sprite_corners(x, y, s.ornt)
-  sprs={lx_ly=mget(cnrs.lx, cnrs.ly),
-        hx_ly=mget(cnrs.hx, cnrs.ly),
-        lx_hy=mget(cnrs.lx, cnrs.hy),
-        hx_hy=mget(cnrs.hx, cnrs.hy)}
+  --[[Calculated by the spider sprites' inner corners
+    plus one in the direction of where its tested]]
+  sprs={lx_ly=mget((cnrs.lx-1)\8, cnrs.ly\8),
+        lx_hy=mget((cnrs.lx-1)\8, cnrs.hy\8),
+        hx_ly=mget((cnrs.hx+1)\8, cnrs.ly\8),
+        hx_hy=mget((cnrs.hx+1)\8, cnrs.hy\8),
+        hy_lx=mget(cnrs.lx\8, (cnrs.hy+1)\8),
+        hy_hx=mget(cnrs.hx\8, (cnrs.hy+1)\8),
+        ly_lx=mget(cnrs.lx\8, (cnrs.ly-1)\8),
+        ly_hx=mget(cnrs.hx\8, (cnrs.ly-1)\8)}
   --[[ The sprite flags indicate if they block movement
        in the orientation equals to its flag
-       always at the halfwaypoint in the sprite]]
+       always at the start in the sprite]]
   --HIGH Y
-  if fget(sprs.hx_hy,1) or fget(sprs.lx_hy,1) then
-    s.ymax=cnrs.hy*8-4
+  if fget(sprs.hy_hx,1) or fget(sprs.hy_lx,1) then
+    s.ymax=((cnrs.hy+1)\8)*8-8
   elseif always_update then
     s.ymax=120
     if (abs(s.ornt)==1) s.on_air=true
   end
   --LOW  X
   if fget(sprs.lx_ly,2) or fget(sprs.lx_hy,2) then
-    s.xmin=cnrs.lx*8+4
+    s.xmin=((cnrs.lx-1)\8)*8+8
   elseif always_update then
     s.xmin=0
     if (abs(s.ornt)==2) s.on_air=true
   end
   --LOW  Y
-  if fget(sprs.hx_ly,3) or fget(sprs.lx_ly,3) then
-    s.ymin=cnrs.ly*8+4
+  if fget(sprs.ly_hx,3) or fget(sprs.ly_lx,3) then
+    s.ymin=((cnrs.ly-1)\8)*8+8
   elseif always_update then
     s.ymin=0
     if (abs(s.ornt)==3) s.on_air=true
   end
   --HIGH X
   if fget(sprs.hx_ly,4) or fget(sprs.hx_hy,4) then
-    s.xmax=cnrs.hx*8-4
+    s.xmax=((cnrs.hx+1)\8)*8-8
   elseif always_update then
     s.xmax=120
     if (abs(s.ornt)==4) s.on_air=true
