@@ -35,7 +35,7 @@ function ant_emerge(ix,iy)
   map_sprt=mget(ix,iy)
   spwnp=0.01
   -- 5 flag to indicate spawn sprites
-  if fget(map_sprt,5) and #(ants.alive) < bulbs.max and
+  if fget(map_sprt,5) and #(ants.alive) < ants.max and
       rnd()<=spwnp then
     for flag=1,4 do
       if fget(map_sprt,flag) then

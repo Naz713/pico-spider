@@ -231,7 +231,7 @@ function limits_update(x, y, always_update)
   end
 end
 
-function spdr_front_legs()
+function spdr_head_crnr()
   if (s.ornt%2)==1 then
     -- horizontal orientation (odd)
     if s.ornt<0 then
@@ -239,14 +239,14 @@ function spdr_front_legs()
     else
       plus_x=15
     end
-    if abs(s.ornt)==3 then
+    if abs(s.ornt)==1 then
       plus_y=0
     else
       plus_y=7
     end
   else
     -- vertical orientation (even)
-    if abs(s.ornt)==2 then
+    if abs(s.ornt)==4 then
       plus_x=0
     else
       plus_x=7
