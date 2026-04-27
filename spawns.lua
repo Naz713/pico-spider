@@ -37,11 +37,9 @@ function ant_emerge(ix,iy)
   -- 5 flag to indicate spawn sprites
   if fget(map_sprt,5) and #(ants.alive) < ants.max and
       rnd()<=spwnp then
-    for flag=1,4 do
-      if fget(map_sprt,flag) then
-        return add(ants.alive, {xpos=(ix*8),ypos=(iy*8),ornt=flag})
-      end
-    end
+    -- flags 1,2:Orientation (as the character) to where it has a base to solid
+    ant_ornt=shr(fget(map_sprt)%8,1) -- turn the second and third bit into an number: the ornt
+    return add(ants.alive, {xpos=(ix*8),ypos=(iy*8), vel=0, ornt=ant_ornt})
   end
 end
 

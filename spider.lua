@@ -200,30 +200,35 @@ function limits_update(x, y, always_update)
         ly_hx=mget(cnrs.hx\8, (cnrs.ly-1)\8)}
   --[[ The sprite flags indicate if they block movement
        in the orientation equals to its flag
-       always at the start in the sprite]]
+       always at the start in the sprite
+    Ignoring sprites with flags higher than 4]]
   --HIGH Y
-  if fget(sprs.hy_hx,1) or fget(sprs.hy_lx,1) then
+  if (fget(sprs.hy_hx,1) and fget(sprs.hy_hx)<=32) or
+      (fget(sprs.hy_lx,1) and fget(sprs.hy_lx)<=32) then
     s.ymax=((cnrs.hy+1)\8)*8-8
   elseif always_update then
     s.ymax=120
     if (abs(s.ornt)==1) s.on_air=true
   end
   --LOW  X
-  if fget(sprs.lx_ly,2) or fget(sprs.lx_hy,2) then
+  if (fget(sprs.lx_ly,2) and fget(sprs.lx_ly)<=32) or
+      (fget(sprs.lx_hy,2) and fget(sprs.lx_hy)<=32) then
     s.xmin=((cnrs.lx-1)\8)*8+8
   elseif always_update then
     s.xmin=0
     if (abs(s.ornt)==2) s.on_air=true
   end
   --LOW  Y
-  if fget(sprs.ly_hx,3) or fget(sprs.ly_lx,3) then
+  if (fget(sprs.ly_hx,3) and fget(sprs.ly_hx)<=32) or
+      (fget(sprs.ly_lx,3) and fget(sprs.ly_lx)<=32) then
     s.ymin=((cnrs.ly-1)\8)*8+8
   elseif always_update then
     s.ymin=0
     if (abs(s.ornt)==3) s.on_air=true
   end
   --HIGH X
-  if fget(sprs.hx_ly,4) or fget(sprs.hx_hy,4) then
+  if (fget(sprs.hx_ly,4) and fget(sprs.hx_ly)<=32) or
+      (fget(sprs.hx_hy,4) and fget(sprs.hx_hy)<=32) then
     s.xmax=((cnrs.hx+1)\8)*8-8
   elseif always_update then
     s.xmax=120
