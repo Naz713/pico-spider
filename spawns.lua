@@ -8,7 +8,7 @@ function spawns_update(sx,sy)
       ant_emerge(ix,iy)
     end
   end
-  ants_move()
+  ants_move(sx,sy)
 end
 
 function bulb_spawn(x,y)
@@ -61,8 +61,23 @@ function draw_ants()
   end
 end
 
-function ants_move()
-  for ant in all(ants.alive) do
-    --TODO
+function ants_move(sx,sy)
+  for i, ant in ipairs(ants.alive) do
+    -- Calculate distance with the sqr "circle" distance (max function)
+    if max(abs(sx - ant.xpos), abs(sy - ant.ypos)) >= ants.mdist then
+      del(ants.alive, ant)
+    else
+      if (ant.ornt%2)==1 then
+      -- horizontal orientation (odd)
+        ant.vel += ants.acc*sgn(sx - ant.xpos)
+        ant.vel = min(abs(ant.vel),ants.mvel)*sgn(ant.vel)
+        ant.xpos += ant.vel
+      else
+      -- vertical orientation (even)
+        ant.vel += ants.acc*sgn(sy - ant.ypos)
+        ant.vel = min(abs(ant.vel),ants.mvel)*sgn(ant.vel)
+        ant.ypos += ant.vel
+      end
+    end
   end
 end
