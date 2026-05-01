@@ -78,6 +78,99 @@ function ants_move(sx,sy)
         ant.vel = min(abs(ant.vel),ants.mvel)*sgn(ant.vel)
         ant.ypos += ant.vel
       end
+      ant.ornt = abs(ant.ornt)*sgn(ant.vel)
+      -- check_inner_cornr(ant)
+      -- check_wall_cornr(ant)
     end
   end
 end
+
+function ant_ahead(ant)
+  if (ant.ornt%2)==1 then
+    -- horizontal orientation (odd)
+    if ant.ornt<0 then
+      plus_x=-1
+    else
+      plus_x=8
+    end
+    if abs(ant.ornt)==1 then
+      plus_y=4
+    else
+      plus_y=3
+    end
+  else
+    -- vertical orientation (even)
+    if abs(ant.ornt)==4 then
+      plus_x=4
+    else
+      plus_x=3
+    end
+    if ant.ornt<0 then
+      plus_y=-1
+    else
+      plus_y=8
+    end
+  end
+  return {x=ant.xpos+plus_x, y=ant.ypos+plus_y}
+end
+
+function check_wall_cornr(ant)
+  cord=ant_ahead(ant)
+  ahead_spr=mget(cord.xpos\8, cord.ypos\8)
+  
+  if (abs(ant.ornt%2)==1 and ant.ornt<0)
+    and (fget(ahead_spr,2) and fget(ahead_spr)<=32) then
+
+  elseif (abs(ant.ornt%2)==0 and ant.ornt<0)
+    and (fget(ahead_spr,3) and fget(ahead_spr)<=32) then
+
+  elseif (abs(ant.ornt%2)==1 and ant.ornt>0)
+    and (fget(ahead_spr,4) and fget(ahead_spr)<=32) then
+
+  elseif (abs(ant.ornt%2)==0 and ant.ornt>0)
+    and (fget(ahead_spr,1) and fget(ahead_spr)<=32) then
+
+  end
+
+end
+
+function ant_front_down(ant)
+  if (ant.ornt%2)==0 then
+    -- vertical orientation (even)
+    if ant.ornt<0 then
+      plus_x=0
+    else
+      plus_x=7
+    end
+    if abs(ant.ornt)==2 then
+      plus_y=-1
+    else
+      plus_y=8
+    end
+  else
+    -- horizontal orientation (odd)
+    if abs(ant.ornt)==3 then
+      plus_x=-1
+    else
+      plus_x=8
+    end
+    if ant.ornt<0 then
+      plus_y=0
+    else
+      plus_y=7
+    end
+  end
+  return {x=ant.xpos+plus_x, y=ant.ypos+plus_y}
+end
+
+function check_inner_cornr(ant)
+  cord=ant_front_down(ant)
+  
+  if abs(ant.ornt)==1 then
+  elseif abs(ant.ornt)==2 then
+  elseif abs(ant.ornt)==3 then
+  elseif abs(ant.ornt)==4 then
+  end
+
+end
+
