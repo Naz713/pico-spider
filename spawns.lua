@@ -79,8 +79,12 @@ function ants_move(sx,sy)
         ant.ypos += ant.vel
       end
       ant.ornt = abs(ant.ornt)*sgn(ant.vel)
+
+      check_wall_cornr(ant)
+      -- fall_into_wall(ant) --if the ant was left in the air correct to floor
       -- check_inner_cornr(ant)
-      -- check_wall_cornr(ant)
+
+      --printh(ant.xpos..","..ant.ypos.."|"..ant.ornt.." "..ant.vel)
     end
   end
 end
@@ -116,22 +120,64 @@ end
 
 function check_wall_cornr(ant)
   cord=ant_ahead(ant)
-  ahead_spr=mget(cord.xpos\8, cord.ypos\8)
+  ahead_spr=mget(cord.x\8, cord.y\8)
   
   if (abs(ant.ornt%2)==1 and ant.ornt<0)
     and (fget(ahead_spr,2) and fget(ahead_spr)<=32) then
+    -- Horizontal left heading
+      if ant.ornt==-1 then
+        ant.ypos -= ant.xpos%8
+        ant.xpos = (ant.xpos\8)*8+8
+        ant.ornt=-2
+      elseif ant.ornt==-3 then
+        ant.ypos += ant.xpos%8
+        ant.xpos = (ant.xpos\8)*8+8
+        ant.ornt=2
+        ant.vel = -1*ant.vel
+      end
 
   elseif (abs(ant.ornt%2)==0 and ant.ornt<0)
     and (fget(ahead_spr,3) and fget(ahead_spr)<=32) then
+    -- Vertical up heading
+      if ant.ornt==-2 then
+        ant.xpos += ant.ypos%8
+        ant.ypos = (ant.ypos\8)*8+8
+        ant.ornt=3
+        ant.vel = -1*ant.vel
+      elseif ant.ornt==-4 then
+        ant.xpos -= ant.ypos%8
+        ant.ypos = (ant.ypos\8)*8+8
+        ant.ornt=-3
+      end
 
   elseif (abs(ant.ornt%2)==1 and ant.ornt>0)
     and (fget(ahead_spr,4) and fget(ahead_spr)<=32) then
+    -- Horizontal right heading
+      if ant.ornt==1 then
+        ant.ypos -= ant.xpos%8
+        ant.xpos = (ant.xpos\8)*8
+        ant.ornt=-4
+        ant.vel = -1*ant.vel
+      elseif ant.ornt==3 then
+        ant.ypos += ant.xpos%8
+        ant.xpos = (ant.xpos\8)*8
+        ant.ornt=4
+      end
 
   elseif (abs(ant.ornt%2)==0 and ant.ornt>0)
     and (fget(ahead_spr,1) and fget(ahead_spr)<=32) then
-
+    -- Vertical down heading
+      if ant.ornt==2 then
+        ant.xpos += ant.ypos%8
+        ant.ypos = (ant.ypos\8)*8
+        ant.ornt=1
+      elseif ant.ornt==4 then
+        ant.xpos -= ant.ypos%8
+        ant.ypos = (ant.ypos\8)*8
+        ant.ornt=-1
+        ant.vel = -1*ant.vel
+      end
   end
-
 end
 
 function ant_front_down(ant)
@@ -165,12 +211,63 @@ end
 
 function check_inner_cornr(ant)
   cord=ant_front_down(ant)
-  
-  if abs(ant.ornt)==1 then
-  elseif abs(ant.ornt)==2 then
-  elseif abs(ant.ornt)==3 then
-  elseif abs(ant.ornt)==4 then
-  end
+  front_down_spr=mget(cord.x\8, cord.y\8)
+  --TODO modify for this case, this was just pasted
+  if (abs(ant.ornt%2)==1 and ant.ornt<0)
+    and (fget(front_down_spr,2) and fget(front_down_spr)<=32) then
+    -- Horizontal left heading
+      if ant.ornt==-1 then
+        ant.ypos -= ant.xpos%8
+        ant.xpos = (ant.xpos\8)*8+8
+        ant.ornt=-2
+      elseif ant.ornt==-3 then
+        ant.ypos += ant.xpos%8
+        ant.xpos = (ant.xpos\8)*8+8
+        ant.ornt=2
+        ant.vel = -1*ant.vel
+      end
 
+  elseif (abs(ant.ornt%2)==0 and ant.ornt<0)
+    and (fget(front_down_spr,3) and fget(front_down_spr)<=32) then
+    -- Vertical up heading
+      if ant.ornt==-2 then
+        ant.xpos += ant.ypos%8
+        ant.ypos = (ant.ypos\8)*8+8
+        ant.ornt=3
+        ant.vel = -1*ant.vel
+      elseif ant.ornt==-4 then
+        ant.xpos -= ant.ypos%8
+        ant.ypos = (ant.ypos\8)*8+8
+        ant.ornt=-3
+      end
+
+  elseif (abs(ant.ornt%2)==1 and ant.ornt>0)
+    and (fget(front_down_spr,4) and fget(front_down_spr)<=32) then
+    -- Horizontal right heading
+      if ant.ornt==1 then
+        ant.ypos -= ant.xpos%8
+        ant.xpos = (ant.xpos\8)*8
+        ant.ornt=-4
+        ant.vel = -1*ant.vel
+      elseif ant.ornt==3 then
+        ant.ypos += ant.xpos%8
+        ant.xpos = (ant.xpos\8)*8
+        ant.ornt=4
+      end
+
+  elseif (abs(ant.ornt%2)==0 and ant.ornt>0)
+    and (fget(front_down_spr,1) and fget(front_down_spr)<=32) then
+    -- Vertical down heading
+      if ant.ornt==2 then
+        ant.xpos += ant.ypos%8
+        ant.ypos = (ant.ypos\8)*8
+        ant.ornt=1
+      elseif ant.ornt==4 then
+        ant.xpos -= ant.ypos%8
+        ant.ypos = (ant.ypos\8)*8
+        ant.ornt=-1
+        ant.vel = -1*ant.vel
+      end
+  end
 end
 

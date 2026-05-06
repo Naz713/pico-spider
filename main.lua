@@ -35,8 +35,8 @@ function _init()
     alive=0
   }
   ants={
-    max=16,
-    mvel=5,
+    max=1,
+    mvel=4,
     acc=1,
     alive={},
     --the max distance of the character / min despawn distance
