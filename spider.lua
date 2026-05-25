@@ -49,9 +49,33 @@ function run_pos_update(run_vel)
   else
     s.ypos+=run_vel
   end
+  
   cord=spdr_head_crnr()
   check_wall_cornr(s, mget(cord.x\8, cord.y\8),true)
+  
   within_pos_limits()
+  arrive_top()
+end
+
+function arrive_top()
+  if abs(s.ornt)%2==0 and s.ornt<0 then
+    cord=spdr_front_feet()
+    front_down_spr = mget(cord.x\8, cord.y\8)
+
+    if s.ornt==-4
+      and (not fget(front_down_spr,4) and fget(front_down_spr)<=32) then
+    s.xpos += s.ypos%8
+    s.ypos = (s.ypos\8)*8
+    s.ornt=1
+    s.rvel = -1*s.rvel
+
+    elseif s.ornt==-2
+      and (not fget(front_down_spr,2) and fget(front_down_spr)<=32) then
+    s.xpos -= s.ypos%8
+    s.ypos = (s.ypos\8)*8
+    s.ornt=-1
+    end
+  end
 end
 
 -- update orientation and related variables
@@ -242,26 +266,55 @@ function spdr_head_crnr()
   if (s.ornt%2)==1 then
     -- horizontal orientation (odd)
     if s.ornt<0 then
-      plus_x=0
+      plus_x=-1
     else
       plus_x=16
     end
     if abs(s.ornt)==1 then
       plus_y=0
     else
-      plus_y=8
+      plus_y=7
     end
   else
     -- vertical orientation (even)
     if abs(s.ornt)==4 then
       plus_x=0
     else
+      plus_x=7
+    end
+    if s.ornt<0 then
+      plus_y=-1
+    else
+      plus_y=16
+    end
+  end
+  return {x=s.xpos+plus_x, y=s.ypos+plus_y}
+end
+
+function spdr_front_feet()
+  if (s.ornt%2)==1 then
+    -- horizontal orientation (odd)
+    if s.ornt<0 then
+      plus_x=0
+    else
+      plus_x=15
+    end
+    if abs(s.ornt)==3 then
+      plus_y=-1
+    else
+      plus_y=8
+    end
+  else
+    -- vertical orientation (even)
+    if abs(s.ornt)==2 then
+      plus_x=-1
+    else
       plus_x=8
     end
     if s.ornt<0 then
       plus_y=0
     else
-      plus_y=16
+      plus_y=15
     end
   end
   return {x=s.xpos+plus_x, y=s.ypos+plus_y}
@@ -283,5 +336,8 @@ function spdr_draw()
     spr(sprite,s.xpos,s.ypos,
         1,2,
         (abs(s.ornt)>2), (s.ornt<0))
-  end 
+  end
+
+  --coord=spdr_front_feet()
+  --rect(coord.x,coord.y,coord.x,coord.y,10)
 end
