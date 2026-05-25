@@ -58,6 +58,9 @@ function draw_ants()
       spr(verspr, ant.xpos, ant.ypos,1,1,
           (abs(ant.ornt)>2), (ant.ornt<0))
     end
+    --coord=ant_front_down(ant)
+    --rect(coord.x,coord.y,coord.x,coord.y,10)
+
   end
 end
 
@@ -79,10 +82,11 @@ function ants_move(sx,sy)
         ant.ypos += ant.vel
       end
       ant.ornt = abs(ant.ornt)*sgn(ant.vel)
-
-      check_wall_cornr(ant)
-      -- fall_into_wall(ant) --if the ant was left in the air correct to floor
+      
       -- check_inner_cornr(ant)
+      check_wall_cornr(ant)
+      fall_into_wall(ant) --if the ant was left in the air correct to floor
+      
 
       --printh(ant.xpos..","..ant.ypos.."|"..ant.ornt.." "..ant.vel)
     end
@@ -122,7 +126,7 @@ function check_wall_cornr(ant)
   cord=ant_ahead(ant)
   ahead_spr=mget(cord.x\8, cord.y\8)
   
-  if (abs(ant.ornt%2)==1 and ant.ornt<0)
+  if (abs(ant.ornt)%2==1 and ant.ornt<0)
     and (fget(ahead_spr,2) and fget(ahead_spr)<=32) then
     -- Horizontal left heading
       if ant.ornt==-1 then
@@ -136,7 +140,7 @@ function check_wall_cornr(ant)
         ant.vel = -1*ant.vel
       end
 
-  elseif (abs(ant.ornt%2)==0 and ant.ornt<0)
+  elseif (abs(ant.ornt)%2==0 and ant.ornt<0)
     and (fget(ahead_spr,3) and fget(ahead_spr)<=32) then
     -- Vertical up heading
       if ant.ornt==-2 then
@@ -150,7 +154,7 @@ function check_wall_cornr(ant)
         ant.ornt=-3
       end
 
-  elseif (abs(ant.ornt%2)==1 and ant.ornt>0)
+  elseif (abs(ant.ornt)%2==1 and ant.ornt>0)
     and (fget(ahead_spr,4) and fget(ahead_spr)<=32) then
     -- Horizontal right heading
       if ant.ornt==1 then
@@ -164,7 +168,7 @@ function check_wall_cornr(ant)
         ant.ornt=4
       end
 
-  elseif (abs(ant.ornt%2)==0 and ant.ornt>0)
+  elseif (abs(ant.ornt)%2==0 and ant.ornt>0)
     and (fget(ahead_spr,1) and fget(ahead_spr)<=32) then
     -- Vertical down heading
       if ant.ornt==2 then
@@ -180,30 +184,47 @@ function check_wall_cornr(ant)
   end
 end
 
+function fall_into_wall(ant)
+  cord=ant_front_down(ant)
+
+  down_spr=mget(cord.x\8, cord.y\8)
+  if not fget(down_spr,abs(ant.ornt)) then
+    if abs(ant.ornt) == 1 then
+      ant.ypos += 8
+    elseif abs(ant.ornt) == 2 then
+      ant.xpos -= 8
+    elseif abs(ant.ornt) == 3 then
+      ant.ypos -= 8
+    elseif abs(ant.ornt) == 4 then
+      ant.xpos += 8
+    end
+  end
+end
+
 function ant_front_down(ant)
   if (ant.ornt%2)==0 then
     -- vertical orientation (even)
-    if ant.ornt<0 then
-      plus_x=0
-    else
-      plus_x=7
-    end
     if abs(ant.ornt)==2 then
+      plus_x=-1
+    else
+      plus_x=8
+    end
+    if ant.ornt<0 then
       plus_y=-1
     else
       plus_y=8
     end
   else
     -- horizontal orientation (odd)
-    if abs(ant.ornt)==3 then
+    if ant.ornt<0 then
       plus_x=-1
     else
       plus_x=8
     end
-    if ant.ornt<0 then
-      plus_y=0
+    if abs(ant.ornt)==3 then
+      plus_y=-1
     else
-      plus_y=7
+      plus_y=8
     end
   end
   return {x=ant.xpos+plus_x, y=ant.ypos+plus_y}
