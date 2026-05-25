@@ -83,7 +83,7 @@ function ants_move(sx,sy)
       end
       ant.ornt = abs(ant.ornt)*sgn(ant.vel)
       
-      -- check_inner_cornr(ant)
+      check_inner_cornr(ant)
       check_wall_cornr(ant)
       fall_into_wall(ant) --if the ant was left in the air correct to floor
       
@@ -233,62 +233,58 @@ end
 function check_inner_cornr(ant)
   cord=ant_front_down(ant)
   front_down_spr=mget(cord.x\8, cord.y\8)
-  --TODO modify for this case, this was just pasted
-  if (abs(ant.ornt%2)==1 and ant.ornt<0)
-    and (fget(front_down_spr,2) and fget(front_down_spr)<=32) then
-    -- Horizontal left heading
-      if ant.ornt==-1 then
-        ant.ypos -= ant.xpos%8
-        ant.xpos = (ant.xpos\8)*8+8
-        ant.ornt=-2
-      elseif ant.ornt==-3 then
-        ant.ypos += ant.xpos%8
-        ant.xpos = (ant.xpos\8)*8+8
-        ant.ornt=2
-        ant.vel = -1*ant.vel
-      end
 
-  elseif (abs(ant.ornt%2)==0 and ant.ornt<0)
-    and (fget(front_down_spr,3) and fget(front_down_spr)<=32) then
-    -- Vertical up heading
-      if ant.ornt==-2 then
-        ant.xpos += ant.ypos%8
-        ant.ypos = (ant.ypos\8)*8+8
-        ant.ornt=3
-        ant.vel = -1*ant.vel
-      elseif ant.ornt==-4 then
-        ant.xpos -= ant.ypos%8
-        ant.ypos = (ant.ypos\8)*8+8
-        ant.ornt=-3
-      end
+  if ant.ornt==3
+      and (not fget(front_down_spr,3) and fget(front_down_spr)<=32) then
+    ant.ypos -= ant.xpos%8
+    ant.xpos = (ant.xpos\8)*8+8
+    ant.ornt=-2
+    ant.vel = -1*ant.vel
 
-  elseif (abs(ant.ornt%2)==1 and ant.ornt>0)
-    and (fget(front_down_spr,4) and fget(front_down_spr)<=32) then
-    -- Horizontal right heading
-      if ant.ornt==1 then
-        ant.ypos -= ant.xpos%8
-        ant.xpos = (ant.xpos\8)*8
-        ant.ornt=-4
-        ant.vel = -1*ant.vel
-      elseif ant.ornt==3 then
-        ant.ypos += ant.xpos%8
-        ant.xpos = (ant.xpos\8)*8
-        ant.ornt=4
-      end
+  elseif ant.ornt==1
+      and (not fget(front_down_spr,1) and fget(front_down_spr)<=32) then
+    ant.ypos += ant.xpos%8
+    ant.xpos = (ant.xpos\8)*8+8
+    ant.ornt=2
 
-  elseif (abs(ant.ornt%2)==0 and ant.ornt>0)
-    and (fget(front_down_spr,1) and fget(front_down_spr)<=32) then
-    -- Vertical down heading
-      if ant.ornt==2 then
-        ant.xpos += ant.ypos%8
-        ant.ypos = (ant.ypos\8)*8
-        ant.ornt=1
-      elseif ant.ornt==4 then
-        ant.xpos -= ant.ypos%8
-        ant.ypos = (ant.ypos\8)*8
-        ant.ornt=-1
-        ant.vel = -1*ant.vel
-      end
+  elseif ant.ornt==4
+      and (not fget(front_down_spr,4) and fget(front_down_spr)<=32) then
+    ant.xpos += ant.ypos%8
+    ant.ypos = (ant.ypos\8)*8+8
+    ant.ornt=3
+
+  elseif ant.ornt==2
+      and (not fget(front_down_spr,2) and fget(front_down_spr)<=32) then
+    ant.xpos -= ant.ypos%8
+    ant.ypos = (ant.ypos\8)*8+8
+    ant.ornt=-3
+    ant.vel = -1*ant.vel
+
+  elseif ant.ornt==-3
+      and (not fget(front_down_spr,3) and fget(front_down_spr)<=32) then
+    ant.ypos -= ant.xpos%8
+    ant.xpos = (ant.xpos\8)*8
+    ant.ornt=-4
+
+  elseif ant.ornt==-1
+      and (not fget(front_down_spr,1) and fget(front_down_spr)<=32) then
+    ant.ypos += ant.xpos%8
+    ant.xpos = (ant.xpos\8)*8
+    ant.ornt=4
+    ant.vel = -1*ant.vel
+
+  elseif ant.ornt==-4
+      and (not fget(front_down_spr,4) and fget(front_down_spr)<=32) then
+    ant.xpos += ant.ypos%8
+    ant.ypos = (ant.ypos\8)*8
+    ant.ornt=1
+    ant.vel = -1*ant.vel
+
+  elseif ant.ornt==-2
+      and (not fget(front_down_spr,2) and fget(front_down_spr)<=32) then
+    ant.xpos -= ant.ypos%8
+    ant.ypos = (ant.ypos\8)*8
+    ant.ornt=-1
   end
 end
 
