@@ -49,6 +49,8 @@ function run_pos_update(run_vel)
   else
     s.ypos+=run_vel
   end
+  cord=spdr_head_crnr()
+  check_wall_cornr(s, mget(cord.x\8, cord.y\8),true)
   within_pos_limits()
 end
 
@@ -242,24 +244,24 @@ function spdr_head_crnr()
     if s.ornt<0 then
       plus_x=0
     else
-      plus_x=15
+      plus_x=16
     end
     if abs(s.ornt)==1 then
       plus_y=0
     else
-      plus_y=7
+      plus_y=8
     end
   else
     -- vertical orientation (even)
     if abs(s.ornt)==4 then
       plus_x=0
     else
-      plus_x=7
+      plus_x=8
     end
     if s.ornt<0 then
       plus_y=0
     else
-      plus_y=15
+      plus_y=16
     end
   end
   return {x=s.xpos+plus_x, y=s.ypos+plus_y}

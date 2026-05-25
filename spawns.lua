@@ -39,7 +39,7 @@ function ant_emerge(ix,iy)
       rnd()<=spwnp then
     -- flags 1,2:Orientation (as the character) to where it has a base to solid
     ant_ornt=shr(fget(map_sprt)%8,1) -- turn the second and third bit into an number: the ornt
-    return add(ants.alive, {xpos=(ix*8),ypos=(iy*8), vel=0, ornt=ant_ornt})
+    return add(ants.alive, {xpos=(ix*8),ypos=(iy*8), rvel=0, ornt=ant_ornt})
   end
 end
 
@@ -72,23 +72,24 @@ function ants_move(sx,sy)
     else
       if (ant.ornt%2)==1 then
       -- horizontal orientation (odd)
-        ant.vel += ants.acc*sgn(sx - ant.xpos)
-        ant.vel = min(abs(ant.vel),ants.mvel)*sgn(ant.vel)
-        ant.xpos += ant.vel
+        ant.rvel += ants.acc*sgn(sx - ant.xpos)
+        ant.rvel = min(abs(ant.rvel),ants.mvel)*sgn(ant.rvel)
+        ant.xpos += ant.rvel
       else
       -- vertical orientation (even)
-        ant.vel += ants.acc*sgn(sy - ant.ypos)
-        ant.vel = min(abs(ant.vel),ants.mvel)*sgn(ant.vel)
-        ant.ypos += ant.vel
+        ant.rvel += ants.acc*sgn(sy - ant.ypos)
+        ant.rvel = min(abs(ant.rvel),ants.mvel)*sgn(ant.rvel)
+        ant.ypos += ant.rvel
       end
-      ant.ornt = abs(ant.ornt)*sgn(ant.vel)
+      ant.ornt = abs(ant.ornt)*sgn(ant.rvel)
       
       check_inner_cornr(ant)
-      check_wall_cornr(ant)
+      cord=ant_ahead(ant)
+      check_wall_cornr(ant, mget(cord.x\8, cord.y\8), false)
       fall_into_wall(ant) --if the ant was left in the air correct to floor
       
 
-      --printh(ant.xpos..","..ant.ypos.."|"..ant.ornt.." "..ant.vel)
+      --printh(ant.xpos..","..ant.ypos.."|"..ant.ornt.." "..ant.rvel)
     end
   end
 end
@@ -122,9 +123,7 @@ function ant_ahead(ant)
   return {x=ant.xpos+plus_x, y=ant.ypos+plus_y}
 end
 
-function check_wall_cornr(ant)
-  cord=ant_ahead(ant)
-  ahead_spr=mget(cord.x\8, cord.y\8)
+function check_wall_cornr(ant, ahead_spr, l_spr)
   
   if (abs(ant.ornt)%2==1 and ant.ornt<0)
     and (fget(ahead_spr,2) and fget(ahead_spr)<=32) then
@@ -137,7 +136,7 @@ function check_wall_cornr(ant)
         ant.ypos += ant.xpos%8
         ant.xpos = (ant.xpos\8)*8+8
         ant.ornt=2
-        ant.vel = -1*ant.vel
+        ant.rvel = -1*ant.rvel
       end
 
   elseif (abs(ant.ornt)%2==0 and ant.ornt<0)
@@ -147,7 +146,7 @@ function check_wall_cornr(ant)
         ant.xpos += ant.ypos%8
         ant.ypos = (ant.ypos\8)*8+8
         ant.ornt=3
-        ant.vel = -1*ant.vel
+        ant.rvel = -1*ant.rvel
       elseif ant.ornt==-4 then
         ant.xpos -= ant.ypos%8
         ant.ypos = (ant.ypos\8)*8+8
@@ -161,11 +160,14 @@ function check_wall_cornr(ant)
         ant.ypos -= ant.xpos%8
         ant.xpos = (ant.xpos\8)*8
         ant.ornt=-4
-        ant.vel = -1*ant.vel
+        ant.rvel = -1*ant.rvel
       elseif ant.ornt==3 then
         ant.ypos += ant.xpos%8
         ant.xpos = (ant.xpos\8)*8
         ant.ornt=4
+      end
+      if l_spr then
+        ant.xpos+=8
       end
 
   elseif (abs(ant.ornt)%2==0 and ant.ornt>0)
@@ -179,7 +181,10 @@ function check_wall_cornr(ant)
         ant.xpos -= ant.ypos%8
         ant.ypos = (ant.ypos\8)*8
         ant.ornt=-1
-        ant.vel = -1*ant.vel
+        ant.rvel = -1*ant.rvel
+      end
+      if l_spr then
+        ant.ypos+=8
       end
   end
 end
@@ -239,7 +244,7 @@ function check_inner_cornr(ant)
     ant.ypos -= ant.xpos%8
     ant.xpos = (ant.xpos\8)*8+8
     ant.ornt=-2
-    ant.vel = -1*ant.vel
+    ant.rvel = -1*ant.rvel
 
   elseif ant.ornt==1
       and (not fget(front_down_spr,1) and fget(front_down_spr)<=32) then
@@ -258,7 +263,7 @@ function check_inner_cornr(ant)
     ant.xpos -= ant.ypos%8
     ant.ypos = (ant.ypos\8)*8+8
     ant.ornt=-3
-    ant.vel = -1*ant.vel
+    ant.rvel = -1*ant.rvel
 
   elseif ant.ornt==-3
       and (not fget(front_down_spr,3) and fget(front_down_spr)<=32) then
@@ -271,14 +276,14 @@ function check_inner_cornr(ant)
     ant.ypos += ant.xpos%8
     ant.xpos = (ant.xpos\8)*8
     ant.ornt=4
-    ant.vel = -1*ant.vel
+    ant.rvel = -1*ant.rvel
 
   elseif ant.ornt==-4
       and (not fget(front_down_spr,4) and fget(front_down_spr)<=32) then
     ant.xpos += ant.ypos%8
     ant.ypos = (ant.ypos\8)*8
     ant.ornt=1
-    ant.vel = -1*ant.vel
+    ant.rvel = -1*ant.rvel
 
   elseif ant.ornt==-2
       and (not fget(front_down_spr,2) and fget(front_down_spr)<=32) then

@@ -14,8 +14,8 @@ end
 
 function collect_bulb()
   sc=spdr_head_crnr()
-  x=flr(sc.x/8)
-  y=flr(sc.y/8)
+  x=sc.x\8
+  y=sc.y\8
   map_sprt=mget(x,y)
   if fget(map_sprt,7) then
     bulb_despawn(x,y)
