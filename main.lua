@@ -58,10 +58,7 @@ end
  end
 
 function _update()
-  limits_update(s.xpos, s.ypos, true)
-  jump_update()
-  run_update()
-  ornt_update()
+  spdr_update()
   --printh(s.xmax..", "..s.xmin..", "..s.ymax..", "..s.ymin..", ")
   spawns_update(s.xpos,s.ypos)
   interactions_update()

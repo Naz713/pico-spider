@@ -301,7 +301,27 @@ function spdr_front_feet()
   return {x=s.xpos+plus_x, y=s.ypos+plus_y}
 end
 
+function spdr_damaged()
+  s.invc_t = 90
+  s.bulbs-=1
+end
+
+function spdr_update()
+  limits_update(s.xpos, s.ypos, true)
+  jump_update()
+  run_update()
+  ornt_update()
+  if s.invc_t > 0 then
+    s.invc_t-=1
+  end
+end
+
 function spdr_draw()
+  if s.invc_t > 0 and (s.invc_t%8)==0 then
+    pal(3,2)
+    pal(11,8)
+  end
+
   -- horizontal orientation (odd)
   if (s.ornt%2)==1 then
     --decide the sprite based on the position
@@ -318,6 +338,8 @@ function spdr_draw()
         1,2,
         (abs(s.ornt)>2), (s.ornt<0))
   end
+
+  pal()
 
   --coord=spdr_head_crnr()
   --rect(coord.x,coord.y,coord.x,coord.y,10)
