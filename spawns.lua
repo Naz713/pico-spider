@@ -82,12 +82,13 @@ function ants_move(sx,sy)
         ant.ypos += ant.rvel
       end
       ant.ornt = abs(ant.ornt)*sgn(ant.rvel)
-      
-      check_inner_cornr(ant)
+
+      cord=ant_front_down(ant)
+      check_inner_cornr(ant, mget(cord.x\8, cord.y\8), false)
+
       cord=ant_ahead(ant)
       check_wall_cornr(ant, mget(cord.x\8, cord.y\8), false)
       fall_into_wall(ant) --if the ant was left in the air correct to floor
-      
 
       --printh(ant.xpos..","..ant.ypos.."|"..ant.ornt.." "..ant.rvel)
     end
@@ -235,9 +236,7 @@ function ant_front_down(ant)
   return {x=ant.xpos+plus_x, y=ant.ypos+plus_y}
 end
 
-function check_inner_cornr(ant)
-  cord=ant_front_down(ant)
-  front_down_spr=mget(cord.x\8, cord.y\8)
+function check_inner_cornr(ant, front_down_spr, l_spr)
 
   if ant.ornt==3
       and (not fget(front_down_spr,3) and fget(front_down_spr)<=32) then
@@ -245,18 +244,27 @@ function check_inner_cornr(ant)
     ant.xpos = (ant.xpos\8)*8+8
     ant.ornt=-2
     ant.rvel = -1*ant.rvel
+    if l_spr then
+      ant.xpos+=8
+    end
 
   elseif ant.ornt==1
       and (not fget(front_down_spr,1) and fget(front_down_spr)<=32) then
     ant.ypos += ant.xpos%8
     ant.xpos = (ant.xpos\8)*8+8
     ant.ornt=2
+    if l_spr then
+      ant.xpos+=8
+    end
 
   elseif ant.ornt==4
       and (not fget(front_down_spr,4) and fget(front_down_spr)<=32) then
     ant.xpos += ant.ypos%8
     ant.ypos = (ant.ypos\8)*8+8
     ant.ornt=3
+    if l_spr then
+      ant.ypos+=8
+    end
 
   elseif ant.ornt==2
       and (not fget(front_down_spr,2) and fget(front_down_spr)<=32) then
@@ -264,6 +272,9 @@ function check_inner_cornr(ant)
     ant.ypos = (ant.ypos\8)*8+8
     ant.ornt=-3
     ant.rvel = -1*ant.rvel
+    if l_spr then
+      ant.ypos+=8
+    end
 
   elseif ant.ornt==-3
       and (not fget(front_down_spr,3) and fget(front_down_spr)<=32) then

@@ -49,33 +49,14 @@ function run_pos_update(run_vel)
   else
     s.ypos+=run_vel
   end
-  
+
   cord=spdr_head_crnr()
-  check_wall_cornr(s, mget(cord.x\8, cord.y\8),true)
-  
+  check_wall_cornr(s, mget(cord.x\8, cord.y\8), true)
+
   within_pos_limits()
-  arrive_top()
-end
 
-function arrive_top()
-  if abs(s.ornt)%2==0 and s.ornt<0 then
-    cord=spdr_front_feet()
-    front_down_spr = mget(cord.x\8, cord.y\8)
-
-    if s.ornt==-4
-      and (not fget(front_down_spr,4) and fget(front_down_spr)<=32) then
-    s.xpos += s.ypos%8
-    s.ypos = (s.ypos\8)*8
-    s.ornt=1
-    s.rvel = -1*s.rvel
-
-    elseif s.ornt==-2
-      and (not fget(front_down_spr,2) and fget(front_down_spr)<=32) then
-    s.xpos -= s.ypos%8
-    s.ypos = (s.ypos\8)*8
-    s.ornt=-1
-    end
-  end
+  cord=spdr_front_feet()
+  check_inner_cornr(s, mget(cord.x\8, cord.y\8), true)
 end
 
 -- update orientation and related variables
@@ -338,6 +319,6 @@ function spdr_draw()
         (abs(s.ornt)>2), (s.ornt<0))
   end
 
-  --coord=spdr_front_feet()
+  --coord=spdr_head_crnr()
   --rect(coord.x,coord.y,coord.x,coord.y,10)
 end
