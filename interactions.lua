@@ -14,10 +14,10 @@ function thorn_damage()
 end
 
 function ant_damage()
-    crnrs=get_sprite_corners(s.xpos\8, s.ypos\8, s.ornt)
-    for i, ant in ipairs(ants.alive) do
+  crnrs=get_sprite_corners(s.xpos\8, s.ypos\8, s.ornt)
+  for i, ant in ipairs(ants.alive) do
     -- Calculate distance with the sqr "circle" distance (max function)
-    if max(abs(sx - ant.xpos), abs(sy - ant.ypos)) >= ants.mdist then
+    if max(abs(s.xpos - ant.xpos), abs(s.ypos - ant.ypos)) >= ants.mdist then
       printh("  ")
     end
   end
