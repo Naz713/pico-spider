@@ -1,24 +1,25 @@
 function interactions_update()
  collect_bulb()
  thorn_damage()
- --ant_damage()
+ ant_damage()
 end
 
 function thorn_damage()
   if s.invc_t <= 0 then
-    crnrs=get_sprite_corners(s.xpos\8, s.ypos\8, s.ornt)
-    if fget(mget(crnrs.lx, crnrs.ly),5) or fget(mget(crnrs.hx, crnrs.hy),5) then
+    crnrs=get_sprite_corners(s.xpos, s.ypos, s.ornt)
+    if fget(mget(crnrs.lx\8, crnrs.ly\8),5) or fget(mget(crnrs.hx\8, crnrs.hy\8),5) then
       spdr_damaged()
     end
   end
 end
 
 function ant_damage()
-  crnrs=get_sprite_corners(s.xpos\8, s.ypos\8, s.ornt)
+  crnrs=get_sprite_corners(s.xpos, s.ypos, s.ornt)
   for i, ant in ipairs(ants.alive) do
-    -- Calculate distance with the sqr "circle" distance (max function)
-    if max(abs(s.xpos - ant.xpos), abs(s.ypos - ant.ypos)) >= ants.mdist then
-      printh("  ")
+    if (ant.xpos>=crnrs.lx-7 and ant.xpos<=crnrs.hx ) and
+        (ant.ypos>=crnrs.ly-7 and ant.ypos<=crnrs.hy ) then
+      spdr_damaged()
+      del(ants.alive, ant)
     end
   end
 end
