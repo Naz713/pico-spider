@@ -1,10 +1,10 @@
 function _init()
-  game_screen=true
+  game_screen=false
+  time_score=0.0
   s={
-    bulbs=4,
+    bulbs=0,
     maxbulbs=16,
     invc_t=0,
-    sprite=0,
     --character position
     xpos=56,
     ypos=24,
@@ -43,6 +43,7 @@ function _init()
     --the max distance of the character / min despawn distance
     mdist=128
   }
+  spdr_setup()
 end
 
 function _update()

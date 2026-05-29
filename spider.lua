@@ -306,6 +306,17 @@ function spdr_damaged()
   s.bulbs-=1
 end
 
+function spdr_setup()
+  s.bulbs=4
+  s.invc_t=0
+  s.xpos=56
+  s.ypos=24
+  s.ornt=1
+  s.rvel=0
+  s.jvel=0
+  ants.alive={}
+end
+
 function spdr_update()
   limits_update(s.xpos, s.ypos, true)
   jump_update()
@@ -313,6 +324,10 @@ function spdr_update()
   ornt_update()
   if s.invc_t > 0 then
     s.invc_t-=1
+  end
+  if s.bulbs<=0 or s.bulbs>=16 then
+    time_score=time()-time_score
+    game_screen=false
   end
 end
 
