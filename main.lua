@@ -1,4 +1,5 @@
 function _init()
+  game_screen=true
   s={
     bulbs=4,
     maxbulbs=16,
@@ -44,28 +45,44 @@ function _init()
   }
 end
 
- function menu_draw()
-    --TODO consider a lazy following camara
-  cls(12)
-  map(0,0,0,0,16,15)
-
-  -- Draw inferior menu to show the collected beltian bodies
-  rectfill(0,120,127,127, 2 --[[Deep Purple]] )
-  rect(0,120,127,127, 6 --[[Gray]] )
-  for i=1,s.bulbs do
-   spr(64,i*8-8,120)
-  end
- end
-
 function _update()
+  if game_screen then
+    game_update()
+  else
+    menu_update()
+  end
+end
+
+function _draw()
+  if game_screen then
+    game_draw()
+  else
+    menu_draw()
+  end
+end
+
+function game_update()
   spdr_update()
   --printh(s.xmax..", "..s.xmin..", "..s.ymax..", "..s.ymin..", ")
   spawns_update(s.xpos,s.ypos)
   interactions_update()
 end
 
-function _draw()
- menu_draw()
- spdr_draw()
- draw_ants()
+function fruit_draw()
+  -- Draw inferior menu to show the collected beltian bodies (fruit)
+  rectfill(0,120,127,127, 2 --[[Deep Purple]] )
+  rect(0,120,127,127, 6 --[[Gray]] )
+  for i=1,s.bulbs do
+   spr(8,i*8-8,120)
+  end
+ end
+
+function game_draw()
+  --TODO consider a lazy following camara
+  cls(12)
+  map(0,0,0,0,16,15)
+
+  fruit_draw()
+  spdr_draw()
+  draw_ants()
 end
