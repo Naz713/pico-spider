@@ -7,6 +7,7 @@ function menu_update()
 end
 
 function menu_draw()
+  camera()
   cls(2)
   h1=-8
   s1=8

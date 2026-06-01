@@ -315,6 +315,11 @@ function spdr_setup()
   s.rvel=0
   s.jvel=0
   ants.alive={}
+  --camera
+  cord=spdr_head_crnr()
+  cam={
+    x=cord.x-64,
+    y=cord.y-56}
 end
 
 function spdr_update()

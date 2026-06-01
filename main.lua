@@ -1,6 +1,7 @@
 function _init()
   game_screen=false
   time_score=0.0
+  cam={}
   s={
     bulbs=0,
     maxbulbs=16,
@@ -67,9 +68,23 @@ function game_update()
   --printh(s.xmax..", "..s.xmin..", "..s.ymax..", "..s.ymin..", ")
   spawns_update(s.xpos,s.ypos)
   interactions_update()
+  cam_update()
+end
+
+function cam_update()
+  mcamvel=4
+  cord=spdr_head_crnr()
+
+  xdiff=min(3, abs(((cord.x-64) - cam.x)*0.25))*sgn((cord.x-64) - cam.x)
+  ydiff=min(5, abs(((cord.y-56) - cam.y)*0.25))*sgn((cord.y-56) - cam.y)
+
+  cam={
+    x=cam.x+xdiff,
+    y=cam.y+ydiff}
 end
 
 function fruit_draw()
+  camera()
   -- Draw inferior menu to show the collected beltian bodies (fruit)
   rectfill(0,120,127,127, 2 --[[Deep Purple]] )
   rect(0,120,127,127, 6 --[[Gray]] )
@@ -79,11 +94,11 @@ function fruit_draw()
  end
 
 function game_draw()
-  --TODO consider a lazy following camara
+  camera(cam.x,cam.y)
   cls(12)
-  map(0,0,0,0,16,15)
-
-  fruit_draw()
+  map(0,0,0,0,128,32)
+  
   spdr_draw()
   draw_ants()
+  fruit_draw()
 end
