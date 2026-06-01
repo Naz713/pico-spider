@@ -214,7 +214,7 @@ function limits_update(x, y, always_update)
       (fget(sprs.hy_lx,1) and fget(sprs.hy_lx)<=32) then
     s.ymax=((cnrs.hy+1)\8)*8-8
   elseif always_update then
-    s.ymax=120
+    s.ymax=32*8
     if (abs(s.ornt)==1) s.on_air=true
   end
   --LOW  X
@@ -238,7 +238,7 @@ function limits_update(x, y, always_update)
       (fget(sprs.hx_hy,4) and fget(sprs.hx_hy)<=32) then
     s.xmax=((cnrs.hx+1)\8)*8-8
   elseif always_update then
-    s.xmax=120
+    s.xmax=128*8
     if (abs(s.ornt)==4) s.on_air=true
   end
 end
@@ -307,10 +307,18 @@ function spdr_damaged()
 end
 
 function spdr_setup()
+  --bulbs
   s.bulbs=4
   s.invc_t=0
+  --position
   s.xpos=56
   s.ypos=24
+  --screen limits
+  s.xmax=128*8
+  s.xmin=0
+  s.ymax=32*8
+  s.ymin=0
+  --Orientation/Velocity
   s.ornt=1
   s.rvel=0
   s.jvel=0

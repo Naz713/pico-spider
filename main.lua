@@ -16,9 +16,9 @@ function _init()
       2 left wall 4 right wall ]]
     ornt=1,
     --screen limits
-    xmax=120,
+    xmax=128*8,
     xmin=0,
-    ymax=120,
+    ymax=32*8,
     ymin=0,
     --running variables
     rvel=0,
