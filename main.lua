@@ -78,9 +78,8 @@ function cam_update()
   xdiff=min(3, abs(((cord.x-64) - cam.x)*0.25))*sgn((cord.x-64) - cam.x)
   ydiff=min(5, abs(((cord.y-56) - cam.y)*0.25))*sgn((cord.y-56) - cam.y)
 
-  cam={
-    x=cam.x+xdiff,
-    y=cam.y+ydiff}
+  cam.x=min(max(cam.x+xdiff,0),112*8)
+  cam.y=min(max(cam.y+ydiff,0),136)
 end
 
 function fruit_draw()
