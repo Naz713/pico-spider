@@ -14,12 +14,14 @@ function thorn_damage()
 end
 
 function ant_damage()
-  crnrs=get_sprite_corners(s.xpos, s.ypos, s.ornt)
-  for i, ant in ipairs(ants.alive) do
-    if (ant.xpos>=crnrs.lx-7 and ant.xpos<=crnrs.hx ) and
-        (ant.ypos>=crnrs.ly-7 and ant.ypos<=crnrs.hy ) then
-      spdr_damaged()
-      del(ants.alive, ant)
+  if s.invc_t <= 0 then
+    crnrs=get_sprite_corners(s.xpos, s.ypos, s.ornt)
+    for i, ant in ipairs(ants.alive) do
+      if (ant.xpos>=crnrs.lx-7 and ant.xpos<=crnrs.hx ) and
+          (ant.ypos>=crnrs.ly-7 and ant.ypos<=crnrs.hy ) then
+        spdr_damaged()
+        del(ants.alive, ant)
+      end
     end
   end
 end
