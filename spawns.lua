@@ -125,17 +125,19 @@ function ant_ahead(ant)
 end
 
 function check_wall_cornr(ant, ahead_spr, l_spr)
-  
+  minvel=3
   if (abs(ant.ornt)%2==1 and ant.ornt<0)
     and (fget(ahead_spr,2) and fget(ahead_spr)<=32) then
     -- Horizontal left heading
       if ant.ornt==-1 then
         ant.ypos -= ant.xpos%8
-        ant.xpos = (ant.xpos\8)*8+8
+        ant.xpos = (ant.xpos\8)*8
+        if (abs(ant.rvel)>=minvel) ant.xpos+=8
         ant.ornt=-2
       elseif ant.ornt==-3 then
         ant.ypos += ant.xpos%8
-        ant.xpos = (ant.xpos\8)*8+8
+        ant.xpos = (ant.xpos\8)*8
+        if (abs(ant.rvel)>=minvel) ant.xpos+=8
         ant.ornt=2
         ant.rvel = -1*ant.rvel
       end
@@ -145,12 +147,14 @@ function check_wall_cornr(ant, ahead_spr, l_spr)
     -- Vertical up heading
       if ant.ornt==-2 then
         ant.xpos += ant.ypos%8
-        ant.ypos = (ant.ypos\8)*8+8
+        ant.ypos = (ant.ypos\8)*8
+        if (abs(ant.rvel)>=minvel) ant.ypos+=8
         ant.ornt=3
         ant.rvel = -1*ant.rvel
       elseif ant.ornt==-4 then
         ant.xpos -= ant.ypos%8
-        ant.ypos = (ant.ypos\8)*8+8
+        ant.ypos = (ant.ypos\8)*8
+        if (abs(ant.rvel)>=minvel) ant.ypos+=8
         ant.ornt=-3
       end
 

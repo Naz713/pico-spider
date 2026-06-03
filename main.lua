@@ -23,7 +23,7 @@ function _init()
     --running variables
     rvel=0,
     racc=1,
-    mrvel=7,
+    mrvel=5,
     fricc=0.75,
     --jumping variables
     grav=3,
