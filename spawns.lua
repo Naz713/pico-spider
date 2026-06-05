@@ -1,24 +1,34 @@
 function spawns_update(sx,sy)
-  r=8 --radius of checks for spawning (screen 16)
-  x=flr(sx/8)
-  y=flr(sy/8)
-  for ix=x-r,x+r-1 do
-    for iy=y-r,y+r-1 do
-      bulb_spawn(ix,iy)
-      ant_emerge(ix,iy)
-    end
-  end
   ants_move(sx,sy)
+  bulb_spawn(sx,sy)
+  ant_emerge(sx,sy)
 end
 
-function bulb_spawn(x,y)
-  map_sprt=mget(x,y)
+function bulb_spawn(sx,sy)
   spwnp=0.001
-  -- 6 flag to indicate empty bulb sprites (7 full)
-  if fget(map_sprt,6) and bulbs.alive < bulbs.max and
-      rnd()<=spwnp then
-    mset(x,y, map_sprt-16)
-    bulbs.alive+=1
+  x=flr(sx/8)
+
+  for ix=max(x-32,0),max(x-16,0) do
+    for iy=0,31 do
+      map_sprt=mget(ix,iy)
+
+      -- 6 flag to indicate empty bulb sprites (7 full)
+      if fget(map_sprt,6) and bulbs.alive < bulbs.max and rnd()<=spwnp then
+        mset(ix,iy, map_sprt-16)
+        bulbs.alive+=1
+      end
+    end
+  end
+  for ix=min(x+16,127),min(x+32,127) do
+    for iy=0,31 do
+      map_sprt=mget(ix,iy)
+
+      -- 6 flag to indicate empty bulb sprites (7 full)
+      if fget(map_sprt,6) and bulbs.alive < bulbs.max and rnd()<=spwnp then
+        mset(ix,iy, map_sprt-16)
+        bulbs.alive+=1
+      end
+    end
   end
 end
 
@@ -31,15 +41,24 @@ function bulb_despawn(x,y)
   end
 end
 
-function ant_emerge(ix,iy)
-  map_sprt=mget(ix,iy)
-  spwnp=0.01
-  -- 5 flag to indicate spawn sprites
-  if fget(map_sprt,5) and #(ants.alive) < ants.max and
-      rnd()<=spwnp then
-    -- flags 1,2:Orientation (as the character) to where it has a base to solid
-    ant_ornt=shr(fget(map_sprt)%8,1) -- turn the second and third bit into an number: the ornt
-    return add(ants.alive, {xpos=(ix*8),ypos=(iy*8), rvel=0, ornt=ant_ornt})
+function ant_emerge(sx,sy)
+  spwnp=0.001
+  r=8 --radius of checks for spawning (screen 16)
+
+  x=flr(sx/8)
+  y=flr(sy/8)
+  for ix=x-r,x+r do
+    for iy=y-r,y+r do
+      map_sprt=mget(ix,iy)
+      
+      -- 5 flag to indicate spawn sprites
+      if fget(map_sprt,5) and #(ants.alive) < ants.max and rnd()<=spwnp then
+        
+        -- flags 1,2:Orientation (as the character) to where it has a base to solid
+        ant_ornt=shr(fget(map_sprt)%8,1) -- turn the second and third bit into an number: the ornt
+        return add(ants.alive, {xpos=(ix*8),ypos=(iy*8), rvel=0, ornt=ant_ornt})
+      end
+    end
   end
 end
 
