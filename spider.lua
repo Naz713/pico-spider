@@ -329,7 +329,8 @@ function spdr_setup()
   cord=spdr_head_crnr()
   cam={
     x=cord.x-64,
-    y=cord.y-56}
+    y=cord.y-56,
+    vel=0}
 end
 
 function spdr_update()

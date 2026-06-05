@@ -1,7 +1,11 @@
 function _init()
   game_screen=false
   time_score=0.0
-  cam={}
+  cam={
+    x=0,
+    y=0,
+    vel=0,
+  }
   s={
     bulbs=0,
     maxbulbs=16,
@@ -72,11 +76,26 @@ function game_update()
 end
 
 function cam_update()
-  mcamvel=4
+  acc=1
+  maxcamvel=s.imp
+  mincamvel=3
   cord=spdr_head_crnr()
 
-  xdiff=min(3, abs(((cord.x-64) - cam.x)*0.25))*sgn((cord.x-64) - cam.x)
-  ydiff=min(5, abs(((cord.y-56) - cam.y)*0.25))*sgn((cord.y-56) - cam.y)
+  xdiff=abs((cord.x-64) - cam.x)*0.25
+  ydiff=abs((cord.y-56) - cam.y)*0.25
+
+  if (xdiff>cam.vel) or (ydiff>cam.vel) then
+    cam.vel+=acc
+    cam.vel=min(cam.vel,maxcamvel)
+  end
+
+  if (xdiff<cam.vel) and (ydiff<cam.vel) then
+    cam.vel-=acc
+    cam.vel=max(cam.vel,mincamvel)
+  end
+
+  xdiff=min(cam.vel, xdiff)*sgn((cord.x-64) - cam.x)
+  ydiff=min(cam.vel, ydiff)*sgn((cord.y-56) - cam.y)
 
   cam.x=min(max(cam.x+xdiff,0),112*8)
   cam.y=min(max(cam.y+ydiff,0),136)
