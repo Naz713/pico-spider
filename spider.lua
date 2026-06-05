@@ -55,8 +55,10 @@ function run_pos_update(run_vel)
 
   within_pos_limits()
 
-  cord=spdr_front_feet()
-  check_inner_cornr(s, mget(cord.x\8, cord.y\8), true)
+  if not s.on_air then
+    cord=spdr_front_feet()
+    check_inner_cornr(s, mget(cord.x\8, cord.y\8), true)
+  end
 end
 
 -- update orientation and related variables
