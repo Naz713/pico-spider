@@ -29,7 +29,7 @@ function run_update()
 
   -- position update
   if s.rvel!=0 then
-    run_pos_update(s.rvel)
+    run_pos_update(s.rvel\1)
   end
 end
   
@@ -127,11 +127,11 @@ function jump_update()
       s.ornt=sgn(s.ornt)
       s.jvel*=-1
     end
-    jump_pos_update(s.jvel)
+    jump_pos_update(s.jvel\1)
   
   --jumping
   elseif s.jvel>0 and s.on_air then
-    jump_pos_update(s.jvel)
+    jump_pos_update(s.jvel\1)
     s.jvel*=s.drag
     if (s.jvel<1) s.jvel=0
   
@@ -139,7 +139,7 @@ function jump_update()
   elseif s.ypos<s.ymax and s.on_air then
     s.jvel-=s.grav
     s.jvel=max(s.jvel,-1*s.imp)
-    jump_pos_update(s.jvel)
+    jump_pos_update(s.jvel\1)
   end
   --asure we stay within limits
   within_pos_limits()

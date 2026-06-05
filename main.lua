@@ -32,7 +32,7 @@ function _init()
     --jumping variables
     grav=3,
     jvel=0,
-    imp=13,
+    imp=11,
     on_air=true,
     drag=0.5,
   }
@@ -69,7 +69,8 @@ end
 
 function game_update()
   spdr_update()
-  --printh(s.xmax..", "..s.xmin..", "..s.ymax..", "..s.ymin..", ")
+  --crd=spdr_head_crnr()
+  --printh(s.xpos..","..s.ypos..","..s.rvel.."|"..s.ornt.."|"..crd.x..","..crd.y)
   spawns_update(s.xpos,s.ypos)
   interactions_update()
   cam_update()
