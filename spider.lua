@@ -345,6 +345,8 @@ function spdr_update()
     time_score=time()-time_score
     game_screen=false
   end
+  --crd=spdr_head_crnr()
+  --printh(s.xpos..","..s.ypos..","..s.rvel.."|"..s.ornt.."|"..crd.x..","..crd.y..","..mget(crd.x\8, crd.y\8))
 end
 
 function spdr_draw()

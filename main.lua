@@ -27,7 +27,7 @@ function _init()
     --running variables
     rvel=0,
     racc=1,
-    mrvel=5,
+    mrvel=5, --never 8 or more
     fricc=0.75,
     --jumping variables
     grav=3,
@@ -69,8 +69,6 @@ end
 
 function game_update()
   spdr_update()
-  --crd=spdr_head_crnr()
-  --printh(s.xpos..","..s.ypos..","..s.rvel.."|"..s.ornt.."|"..crd.x..","..crd.y)
   spawns_update(s.xpos,s.ypos)
   interactions_update()
   cam_update()
