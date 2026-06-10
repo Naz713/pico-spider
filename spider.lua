@@ -50,15 +50,7 @@ function run_pos_update(run_vel)
     s.ypos+=run_vel
   end
 
-  cord=spdr_head_crnr()
-  check_wall_cornr(s, mget(cord.x\8, cord.y\8), true)
-
   within_pos_limits()
-
-  if not s.on_air then
-    cord=spdr_front_feet()
-    check_inner_cornr(s, mget(cord.x\8, cord.y\8), true)
-  end
 end
 
 -- update orientation and related variables
@@ -333,10 +325,23 @@ function spdr_setup()
     vel=0}
 end
 
+function crnr_update()
+  cord=spdr_head_crnr()
+  check_wall_cornr(s, mget(cord.x\8, cord.y\8), true)
+
+  within_pos_limits()
+
+  if not s.on_air then
+    cord=spdr_front_feet()
+    check_inner_cornr(s, mget(cord.x\8, cord.y\8), true)
+  end
+end
+
 function spdr_update()
   limits_update(s.xpos, s.ypos, true)
   jump_update()
   run_update()
+  crnr_update()
   ornt_update()
   if s.invc_t > 0 then
     s.invc_t-=1
