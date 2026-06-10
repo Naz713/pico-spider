@@ -32,9 +32,9 @@ function _init()
     --jumping variables
     grav=3,
     jvel=0,
-    imp=11,
+    imp=9,
     on_air=true,
-    drag=0.5,
+    drag=0.7,
   }
   bulbs={
     max=16,
