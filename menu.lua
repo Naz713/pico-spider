@@ -41,13 +41,13 @@ function menu_draw()
   s4=16
   if time_score>0 then
     if s.bulbs==0 then
-        print("last death on: "..time_score.."S",s4,h4-4)
+        print("last death on: "..time_score.."S",s4,h4-4,8)
     elseif s.bulbs==16 then
-        print("last win on: "..time_score.."S !!!",s4,h4-4)
+        print("last win on: "..time_score.."S !!!",s4,h4-4,10)
     end
   end
 
-  print("use the arrows to move",s4,h4+8)
+  print("use the arrows to move",s4,h4+8,7)
   print("press ❎ to jump",s4,h4+16)
   print("press 🅾️ (C) to start",s4,h4+24)
 end

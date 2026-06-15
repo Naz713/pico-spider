@@ -305,8 +305,8 @@ function spdr_setup()
   s.bulbs=4
   s.invc_t=0
   --position
-  s.xpos=56
-  s.ypos=24
+  s.xpos=64*8
+  s.ypos=19*8
   --screen limits
   s.xmax=128*8
   s.xmin=0

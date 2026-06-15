@@ -41,12 +41,12 @@ function _init()
     alive=0
   }
   ants={
-    max=1,
+    max=8,
     mvel=3,
     acc=1,
     alive={},
     --the max distance of the character / min despawn distance
-    mdist=128
+    mdist=256
   }
   spdr_setup()
 end
