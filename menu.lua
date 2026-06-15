@@ -11,6 +11,7 @@ function menu_draw()
   cls(2)
   h1=-8
   s1=8
+  --Bagheera Thief Spider
   spr(64,s1+8 ,h1+16,1,3) -- B
   spr(65,s1+16,h1+16,1,3) -- a
   spr(66,s1+24,h1+16,1,3) -- g

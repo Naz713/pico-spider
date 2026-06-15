@@ -1,6 +1,8 @@
 pico-8 cartridge // http://www.pico-8.com
 version 43
 __lua__
+-- bAGHEERA tHIEF sPIDER
+-- BY fRACTALnAZ
 le_btn=⬅️
 ri_btn=➡️
 up_btn=⬆️
