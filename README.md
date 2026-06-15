@@ -6,4 +6,5 @@ It is the oficial public name of the game.
 
 _Look for the leaf fruits, and avoid the ants and thorns in this retro style 8bit game._
 
-![cartridge](bts.p8.png)
+Play it here:
+[![cartridge](bts.p8.png)](https://www.lexaloffle.com/bbs/?tid=157572)
