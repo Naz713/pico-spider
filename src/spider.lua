@@ -346,9 +346,20 @@ function spdr_update()
   if s.invc_t > 0 then
     s.invc_t-=1
   end
+  
+  if s.bulbs<=2 then
+    new_mstate = "low"
+  elseif s.bulbs>=12 then
+    new_mstate = "high"
+  else
+    new_mstate = "game"
+  end
+
+
   if s.bulbs<=0 or s.bulbs>=16 then
     time_score=time()-time_score
     game_screen=false
+    new_mstate = "menu"
   end
   --crd=spdr_head_crnr()
   --printh(s.xpos..","..s.ypos..","..s.rvel.."|"..s.ornt.."|"..crd.x..","..crd.y..","..mget(crd.x\8, crd.y\8))

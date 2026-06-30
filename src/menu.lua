@@ -3,6 +3,7 @@ function menu_update()
     time_score=time()
     spdr_setup()
     game_screen = true
+    new_mstate = "game"
   end
 end
 

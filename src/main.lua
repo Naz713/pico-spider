@@ -57,6 +57,7 @@ function _update()
   else
     menu_update()
   end
+  music_update()
 end
 
 function _draw()
