@@ -1,13 +1,113 @@
+h4=80
+s4=16
+
+dial = {
+  en = {
+    "last death on: ",
+    "last win on: ",
+    "start game",
+    "change language [en]",
+    "how to play",
+    "select with ❎ (x)",
+    "use the arrows to move",
+    "use left ⬅️ and right ➡️",
+    "when on floor or celling",
+    "use up ⬆️ and down ⬇️",
+    "when on walls",
+    "press ❎ to jump",
+    "look for the leaf fruit",
+    "see them on the lower bar",
+    "fill the bar to win!!!",
+    "avoid the thorns and ants",
+    "they make you loose fruits",
+    "if the bar empties you loose!",
+    "press 🅾️ (C) to go back",
+  },
+  es = {
+    "ultima derrota: ",
+    "ultima victoria: ",
+    "iniciar juego",
+    "cambiar idioma [es]",
+    "como jugar",
+    "selecciona con ❎ (x)",
+    "muevete con las flechas",
+    "usa izquierda ⬅️ y derecha ➡️",
+    "en el piso y el techo",
+    "usa arriba ⬆️ y abajo ⬇️",
+    "en las paredes",
+    "usa ❎ para saltar",
+    "busca los frutos de hojas",
+    "veelos en la barra inferior",
+    "llena la barra para ganar!!!",
+    "evita las espinas y hormigas",
+    "hacen que pierdas frutos",
+    "si la barra se vacia piedes!",
+    "usa 🅾️ (C) para regresar",
+}}
+
+avai_lan = {"en","es"}
+curr_lan = 1 --sequences start on 1
+
+title_sreen = true
+
+arrow_pos=0
+arrow_time=0
+
 function menu_update()
-  if btn(o_btn) then
+  if title_sreen then
+    title_update()
+  else
+    inst_update()
+  end
+end
+
+function title_update()
+  arrow_time += 2
+  arrow_time %= 30
+  
+  if btnp(x_btn) and arrow_pos == 0 then
     time_score=time()
     spdr_setup()
     game_screen = true
     new_mstate = "game"
+  
+  elseif btnp(x_btn) and arrow_pos == 1 then
+    curr_lan = (curr_lan+1) % count(avai_lan)
+    if curr_lan == 0 then
+      curr_lan = count(avai_lan)
+    end
+  elseif btnp(x_btn) and arrow_pos == 2 then
+    title_sreen = false
+  end
+  
+  if btnp(up_btn) then
+    arrow_pos -= 1
+    arrow_pos %= 3
+  
+  elseif btnp(do_btn) then
+    arrow_pos += 1
+    arrow_pos %= 3
+  end
+
+  lan = avai_lan[curr_lan]
+
+end
+
+function inst_update()
+  if btnp(o_btn) then
+    title_sreen = true
   end
 end
 
 function menu_draw()
+  if title_sreen then
+    title_draw()
+  else
+    inst_draw()
+  end
+end
+
+function title_draw()
   camera()
   cls(2)
   h1=-8
@@ -39,17 +139,43 @@ function menu_draw()
   spr(69,s3+40,h3+16,1,3) -- e
   spr(72,s3+48,h3+16,1,3) -- r
 
-  h4=80
-  s4=16
   if time_score>0 then
     if s.bulbs==0 then
-        print("last death on: "..time_score.."S",s4,h4-4,8)
+        print(dial[lan][1]..time_score.."S",s4,h4-4,8)
     elseif s.bulbs==16 then
-        print("last win on: "..time_score.."S !!!",s4,h4-4,10)
+        print(dial[lan][2]..time_score.."S !!!",s4,h4-4,10)
     end
   end
 
-  print("use the arrows to move",s4,h4+8,7)
-  print("press ❎ to jump",s4,h4+16)
-  print("press 🅾️ (C) to start",s4,h4+24)
+  print(dial[lan][3],s4,h4+8,7)
+  print(dial[lan][4],s4,h4+16)
+  print(dial[lan][5],s4,h4+24)
+  print(dial[lan][6],s4,h4+32)
+
+  spr(76+(arrow_time%2),s4-15+(arrow_time/5),h4+8+(8*arrow_pos))
+end
+
+function inst_draw()
+  camera()
+  cls(14)
+
+  print(dial[lan][7],8,8,7)
+  print(dial[lan][8],8,16)
+  print(dial[lan][9],16,24)
+  print(dial[lan][10],8,32)
+  print(dial[lan][11],16,40)
+  print(dial[lan][12],8,48)
+  
+  spr(128,8,64)
+  print(dial[lan][13],16,64)
+  spr(8,8,72)
+  print(dial[lan][14],16,72)
+  print(dial[lan][15],8,80)
+  spr(160,8,88)
+  print(dial[lan][16],16,88)
+  spr(48,8,96)
+  print(dial[lan][17],16,96)
+  print(dial[lan][18],8,104)
+
+  print(dial[lan][19],8,120)
 end
